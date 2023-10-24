@@ -11,9 +11,7 @@ import {
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 const chainById: Record<number, Chain> = {
-  [optimism.id]: optimism,
   [optimismGoerli.id]: optimismGoerli,
-  [base.id]: base,
   [baseGoerli.id]: baseGoerli,
   [foundry.id]: foundry,
 }
