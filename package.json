@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build:frontend": "cd packages/frontend && pnpm run build",
     "dev": "concurrently -n contracts,frontend -c blue,green \"cd packages/contracts && pnpm run dev\" \"cd packages/frontend && pnpm run dev\"",
     "format": "biome format . --write",
     "format:check": "biome format .",

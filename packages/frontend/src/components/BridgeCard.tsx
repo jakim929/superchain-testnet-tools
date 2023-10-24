@@ -256,50 +256,21 @@ const getBlockExplorerLink = (chain: Chain, transactionHash: Hex) => {
   return `${baseUrl}/tx/${transactionHash}`
 }
 
-const TransactionExplorerLink = ({
-  l1Chain,
-  transactionHash,
-}: { l1Chain: Chain; transactionHash: Hex }) => {
-  const baseUrl = l1Chain.blockExplorers!.default.url
-  return (
-    <a
-      href={`${baseUrl}/tx/${transactionHash}`}
-      target="_blank"
-      rel="noreferrer"
-    >
-      View on block explorer
-    </a>
-  )
-}
-
-const ProgressTracker = ({
-  l1Chain,
-  bridgeTransactionHash,
-}: {
-  l1Chain: Chain
-  bridgeTransactionHash?: Hex
-}) => {
-  const { data: receipt, isLoading } = useWaitForTransaction({
-    hash: bridgeTransactionHash,
-    confirmations: 5,
-  })
-
-  if (!bridgeTransactionHash) {
-    return null
-  }
-
-  return (
-    <div className="flex items-center">
-      <div className="flex-1">
-        {isLoading ? 'Waiting for confirmation on L1...' : 'Confirmed on L1'}
-      </div>
-      <TransactionExplorerLink
-        l1Chain={l1Chain}
-        transactionHash={bridgeTransactionHash}
-      />
-    </div>
-  )
-}
+// const TransactionExplorerLink = ({
+//   l1Chain,
+//   transactionHash,
+// }: { l1Chain: Chain; transactionHash: Hex }) => {
+//   const baseUrl = l1Chain.blockExplorers!.default.url
+//   return (
+//     <a
+//       href={`${baseUrl}/tx/${transactionHash}`}
+//       target="_blank"
+//       rel="noreferrer"
+//     >
+//       View on block explorer
+//     </a>
+//   )
+// }
 
 export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   const chainId = l1Chain.id
@@ -335,30 +306,29 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     })
   })
 
-  const { data: receipt, isLoading: isConfirmationLoading } =
-    useWaitForTransaction({
-      hash: response?.hash,
-      confirmations: 5,
-      onSuccess: () => {
-        toast({
-          title: 'L1 transaction confirmed',
-          description: `${truncateHash(response!.hash)}`,
-          action: (
-            <ToastAction
-              altText="View on explorer"
-              onClick={() => {
-                window.open(
-                  getBlockExplorerLink(l1Chain, response!.hash),
-                  '_blank',
-                )
-              }}
-            >
-              View on explorer
-            </ToastAction>
-          ),
-        })
-      },
-    })
+  const { isLoading: isConfirmationLoading } = useWaitForTransaction({
+    hash: response?.hash,
+    confirmations: 5,
+    onSuccess: () => {
+      toast({
+        title: 'L1 transaction confirmed',
+        description: `${truncateHash(response!.hash)}`,
+        action: (
+          <ToastAction
+            altText="View on explorer"
+            onClick={() => {
+              window.open(
+                getBlockExplorerLink(l1Chain, response!.hash),
+                '_blank',
+              )
+            }}
+          >
+            View on explorer
+          </ToastAction>
+        ),
+      })
+    },
+  })
 
   return (
     <Card className="flex-1">
