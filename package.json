@@ -1,0 +1,19 @@
+{
+  "name": "dapp-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n contracts,frontend -c blue,green \"cd packages/contracts && pnpm run dev\" \"cd packages/frontend && pnpm run dev\"",
+    "format": "biome format . --write",
+    "format:check": "biome format .",
+    "lint": "biome check . --apply-unsafe",
+    "lint:check": "biome check . --verbose"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.2.2",
+    "concurrently": "^8.2.1",
+    "nx": "16.10.0",
+    "typescript": "^5.0.2"
+  }
+}
