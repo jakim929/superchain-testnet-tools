@@ -1,14 +1,8 @@
 import { envVars } from '@/lib/envVars'
 import { getDefaultConnectors } from 'connectkit'
-import { Chain, configureChains, createConfig } from 'wagmi'
-import {
-  base,
-  baseGoerli,
-  foundry,
-  optimism,
-  optimismGoerli,
-} from 'wagmi/chains'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { Chain, configureChains, createConfig, sepolia } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
+import { baseGoerli, foundry, goerli, optimismGoerli } from 'wagmi/chains'
 
 const chainById: Record<number, Chain> = {
   [optimismGoerli.id]: optimismGoerli,
@@ -16,23 +10,15 @@ const chainById: Record<number, Chain> = {
   [foundry.id]: foundry,
 }
 
-const chain = chainById[envVars.VITE_CHAIN_ID]
-
 const { chains, publicClient } = configureChains(
-  [chain],
-  [
-    jsonRpcProvider({
-      rpc: () => ({
-        http: envVars.VITE_JSON_RPC_HTTP_URL,
-      }),
-    }),
-  ],
+  [sepolia, goerli],
+  [publicProvider()],
 )
 
 const connectors = getDefaultConnectors({
   chains: chains,
   app: {
-    name: 'DApp Starter',
+    name: 'Superchain Testnet Tools',
   },
   walletConnectProjectId: envVars.VITE_WALLET_CONNECT_PROJECT_ID,
 })
