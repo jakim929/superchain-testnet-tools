@@ -200,11 +200,14 @@ const Preview = ({
   )
 }
 
-const getBridgeFundsFunctionData = (address: Address) => {
+const getBridgeFundsFunctionData = (address?: Address) => {
+  if (!address) {
+    return null
+  }
   return encodeFunctionData({
     abi: L1CrossDomainMessengerAbi,
     functionName: 'sendMessage',
-    args: [address!, toHex(''), 1000000],
+    args: [address, toHex(''), 1000000],
   })
 }
 
@@ -220,6 +223,7 @@ const useBridgeWrite = (
     functionName: 'aggregate3Value',
     address: '0xcA11bde05977b3631167028862bE2a173976CA11',
     args: [
+      // @ts-ignore
       [
         ...opStackChains.map(({ l1Contracts }) => {
           return {
