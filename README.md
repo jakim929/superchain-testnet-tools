@@ -1,4 +1,4 @@
-# Superchain Testnet Bridge
+# Superchain Testnet Tools
 
 ## How to run locally
 
