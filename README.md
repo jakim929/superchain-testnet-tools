@@ -1,4 +1,4 @@
-# DApp Starter
+# Superchain Testnet Bridge
 
 ## How to run locally
 
