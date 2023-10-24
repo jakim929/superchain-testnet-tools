@@ -14,7 +14,7 @@ export const BridgePage = () => {
         defaultValue={
           supportedSourceChains[0].id.toString()
         }
-        value={chain?.id.toString()}
+        value={chain ? chain.id.toString(): supportedSourceChains[0].id.toString()}
         className="w-[400px]"
       >
         <TabsList className="w-full flex">

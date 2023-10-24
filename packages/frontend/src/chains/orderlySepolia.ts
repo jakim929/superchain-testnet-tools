@@ -5,33 +5,33 @@ import { defineChain } from 'viem'
 import { sepolia } from 'viem/chains'
 import { formattersOptimism } from 'viem/chains/utils'
 
-const zoraSepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
+export const orderlySepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
-    address: '0x1bDBC0ae22bEc0c2f08B4dd836944b3E28fe9b7A',
+    address: '0x5FD6C8D6756C3327f7A368F1cfbc7c003BC7EFC9',
   },
   l1StandardBridge: {
-    address: '0x5376f1D543dcbB5BD416c56C189e4cB7399fCcCB',
+    address: '0x1Af0494040d6904A9F3EE21921de4b359C736333',
   },
 }
 
-export const zoraSepolia = defineChain(
+export const orderlySepolia = defineChain(
   {
-    id: 999999999,
-    network: 'zora-sepolia',
-    name: 'Zora Sepolia',
+    id: 4460,
+    network: 'orderly-sepolia',
+    name: 'Orderly Sepolia',
     nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
       default: {
-        http: ['https://l2-zora-sepolia-0thyhxtf5e.t.conduit.xyz'],
+        http: ['https://l2-orderly-l2-4460-sepolia-8tc3sd7dvy.t.conduit.xyz'],
       },
       public: {
-        http: ['https://l2-zora-sepolia-0thyhxtf5e.t.conduit.xyz'],
+        http: ['https://l2-orderly-l2-4460-sepolia-8tc3sd7dvy.t.conduit.xyz'],
       },
     },
     blockExplorers: {
       default: {
         name: 'Conduit',
-        url: 'https://explorerl2-zora-sepolia-0thyhxtf5e.t.conduit.xyz',
+        url: 'https://explorerl2-orderly-l2-4460-sepolia-8tc3sd7dvy.t.conduit.xyz',
       },
     },
     testnet: true,
@@ -42,9 +42,9 @@ export const zoraSepolia = defineChain(
   },
 )
 
-export const zoraSepoliaOpStackChain: OpStackChain = {
+export const orderlySepoliaOpStackChain: OpStackChain = {
   l1Chain: sepolia,
-  l2Chain: zoraSepolia,
-  l1Contracts: zoraSepoliaOpStackChainL1Contracts,
+  l2Chain: orderlySepolia,
+  l1Contracts: orderlySepoliaOpStackChainL1Contracts,
   l2Contracts: opStackChainL2PredeployContracts,
 } as const

@@ -3,7 +3,7 @@ import { OpStackChain } from '@/chains/types/OpStackChain'
 import { OpStackChainL1Contracts } from '@/chains/types/OpStackChainContracts'
 import { goerli, optimismGoerli } from 'viem/chains'
 
-export const optimismGoerliOpStackChainL1Contracts: OpStackChainL1Contracts = {
+const optimismGoerliOpStackChainL1Contracts: OpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
     address: '0x5086d1eEF304eb5284A0f6720f79403b4e9bE294',
     blockCreated: 7017129,
