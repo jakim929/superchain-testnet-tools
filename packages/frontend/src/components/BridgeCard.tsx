@@ -47,15 +47,19 @@ const NetworkSwitch = ({
 }) => {
   const { name, id } = opStackChain.l2Chain
   return (
-    <div className="w-full flex items-center space-x-2 cursor-pointer py-2">
+    <div className="w-full flex space-x-2 cursor-pointer">
       <Switch
         id={`${id}-network-switch`}
         onCheckedChange={(checked) => {
           onChange(checked)
         }}
         checked={isSelected}
+        className="self-center"
       />
-      <Label htmlFor={`${id}-network-switch`} className="w-full cursor-pointer">
+      <Label
+        htmlFor={`${id}-network-switch`}
+        className="w-full cursor-pointer flex items-center select-none py-3"
+      >
         {name}
       </Label>
     </div>
