@@ -12,7 +12,7 @@ export const BridgePage = () => {
     <div className="flex justify-center ">
       <Tabs
         defaultValue={
-          supportedSourceChains[supportedSourceChains.length - 1].id.toString()
+          supportedSourceChains[0].id.toString()
         }
         value={chain?.id.toString()}
         className="w-[400px]"
