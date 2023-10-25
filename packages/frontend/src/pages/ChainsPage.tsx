@@ -1,7 +1,7 @@
 import { opStackChains } from '@/chains/opStackChains'
 import { OpStackChain } from '@/chains/types/OpStackChain'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import {
   Table,
@@ -56,6 +56,9 @@ export const ChainsPage = () => {
   return (
     <div className="flex justify-center">
       <Card className="w-[700px]">
+        <CardHeader>
+          <CardTitle>OP Stack Testnets</CardTitle>
+        </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
