@@ -1,5 +1,5 @@
 import { Hex } from 'viem'
 
 export const truncateHash = (address: Hex) => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`
+  return `${address.slice(0, 10)}...${address.slice(-6)}`
 }

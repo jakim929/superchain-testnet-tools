@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -26,6 +27,7 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import {
   useAccount,
+  useBalance,
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
@@ -35,6 +37,34 @@ import { Multicall3Abi } from '@/constants/Multicall3Abi'
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { truncateHash } from '@/lib/truncateHash'
+
+const truncateDecimal = (
+  decimalString: string,
+  maxLengthAfterDecimal = 5,
+): string => {
+  // Check if there's a decimal point
+  if (decimalString.includes('.')) {
+    const parts = decimalString.split('.')
+    const integerPart = parts[0]
+    return `${integerPart}.${parts[1].substring(0, maxLengthAfterDecimal)}`
+  }
+  return decimalString // Return as it is if no decimal point
+}
+
+const useFormattedBalance = (chainId: number) => {
+  const { address } = useAccount()
+  const { data } = useBalance({
+    address: address!,
+    chainId: chainId,
+    enabled: !!address,
+  })
+
+  if (!address || !data) {
+    return undefined
+  }
+
+  return `${truncateDecimal(data.formatted)} ${data.symbol}`
+}
 
 const NetworkSwitch = ({
   opStackChain,
@@ -46,6 +76,7 @@ const NetworkSwitch = ({
   isSelected: boolean
 }) => {
   const { name, id } = opStackChain.l2Chain
+  const formattedBalance = useFormattedBalance(id)
   return (
     <div className="w-full flex space-x-2 cursor-pointer">
       <Switch
@@ -58,9 +89,10 @@ const NetworkSwitch = ({
       />
       <Label
         htmlFor={`${id}-network-switch`}
-        className="w-full cursor-pointer flex items-center select-none py-3"
+        className="w-full cursor-pointer flex items-center justify-between select-none py-3"
       >
-        {name}
+        <div>{name}</div>
+        {formattedBalance && <div>{formattedBalance}</div>}
       </Label>
     </div>
   )
@@ -249,14 +281,6 @@ const useBridgeWrite = (
       onSuccess(data.hash)
     },
   })
-
-  // return useContractWrite({
-  //   abi: L1CrossDomainMessengerAbi,
-  //   args: [address!, toHex(''), 1000000],
-  //   functionName: 'sendMessage',
-  //   value: amount,
-  //   address: opStackChains[0]?.l1Contracts.l1CrossDomainMessenger.address,
-  // })
 }
 
 const getBlockExplorerLink = (chain: Chain, transactionHash: Hex) => {
@@ -264,27 +288,13 @@ const getBlockExplorerLink = (chain: Chain, transactionHash: Hex) => {
   return `${baseUrl}/tx/${transactionHash}`
 }
 
-// const TransactionExplorerLink = ({
-//   l1Chain,
-//   transactionHash,
-// }: { l1Chain: Chain; transactionHash: Hex }) => {
-//   const baseUrl = l1Chain.blockExplorers!.default.url
-//   return (
-//     <a
-//       href={`${baseUrl}/tx/${transactionHash}`}
-//       target="_blank"
-//       rel="noreferrer"
-//     >
-//       View on block explorer
-//     </a>
-//   )
-// }
-
 export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   const chainId = l1Chain.id
   const chains = opStackChains.filter(
     (opStackChain) => opStackChain.l1Chain.id === chainId,
   )
+
+  const formattedL1Balance = useFormattedBalance(chainId)
 
   const { toast } = useToast()
 
@@ -341,7 +351,10 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle>{l1Chain.name}</CardTitle>
+        <CardTitle className="flex justify-between">{l1Chain.name}</CardTitle>
+        {formattedL1Balance && (
+          <CardDescription>Balance: {formattedL1Balance}</CardDescription>
+        )}
       </CardHeader>
       <CardContent className="flex flex-col gap-8">
         <NetworkSwitches
