@@ -137,7 +137,10 @@ const NetworkSwitches = ({
 }) => {
   return (
     <div className="flex flex-col gap-4">
-      <Label htmlFor="network-switch-input">Networks</Label>
+      <Label htmlFor="network-switch-input" className="flex justify-between">
+        <div>Networks</div>
+        <div>Current balance</div>
+      </Label>
       <div id="network-switch-input" className="flex flex-col">
         {chains.map((chain) => {
           return (
