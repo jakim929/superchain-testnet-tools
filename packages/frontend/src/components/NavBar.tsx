@@ -40,6 +40,7 @@ const NavBarButtons = () => {
   return (
     <div className="flex h-full gap-2">
       <NavBarButton to="/" title="bridge" />
+      <NavBarButton to="/chains" title="chains" />
       <NavBarButton to="/message-passer" title="message passer" />
     </div>
   )

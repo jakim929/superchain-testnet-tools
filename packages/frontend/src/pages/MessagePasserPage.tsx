@@ -1,3 +1,3 @@
 export const MessagePasserPage = () => {
-  return <div>Coming soon.</div>
+  return <div>Coming soon</div>
 }

@@ -1,5 +1,6 @@
 import { NavBarLayout } from '@/layouts/NavBarLayout'
 import { BridgePage } from '@/pages/BridgePage'
+import { ChainsPage } from '@/pages/ChainsPage'
 import { MessagePasserPage } from '@/pages/MessagePasserPage'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: '/message-passer',
         element: <MessagePasserPage />,
+      },
+      {
+        path: '/chains',
+        element: <ChainsPage />,
       },
     ],
   },
