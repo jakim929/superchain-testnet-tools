@@ -277,6 +277,8 @@ const useBridgeWrite = (
     enabled: !!address && amount > 0n && opStackChains.length > 0,
   })
 
+  console.log(config)
+
   return useContractWrite({
     ...config,
     onSuccess: (data) => {
