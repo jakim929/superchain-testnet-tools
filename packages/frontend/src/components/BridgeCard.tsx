@@ -29,7 +29,9 @@ import {
   useAccount,
   useBalance,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
+  useSwitchNetwork,
   useWaitForTransaction,
 } from 'wagmi'
 import { L1CrossDomainMessengerAbi } from '@/constants/L1CrossDomainMessengerAbi'
@@ -288,6 +290,25 @@ const getBlockExplorerLink = (chain: Chain, transactionHash: Hex) => {
   return `${baseUrl}/tx/${transactionHash}`
 }
 
+const SwitchToChainButton = ({
+  chain,
+}: {
+  chain: Chain
+}) => {
+  const { switchNetwork, isLoading } = useSwitchNetwork({ chainId: chain.id })
+  return (
+    <Button
+      className="w-full"
+      disabled={!switchNetwork || isLoading}
+      onClick={() => {
+        switchNetwork?.()
+      }}
+    >
+      Switch network to {chain.name}
+    </Button>
+  )
+}
+
 export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   const chainId = l1Chain.id
   const chains = opStackChains.filter(
@@ -295,6 +316,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   )
 
   const formattedL1Balance = useFormattedBalance(chainId)
+  const { chain } = useNetwork()
 
   const { toast } = useToast()
 
@@ -366,16 +388,20 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
         <Separator className="" />
         <Preview selectedChains={selectedChains} amount={amount} />
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button
-          className="w-full"
-          disabled={isLoading || !write || isConfirmationLoading}
-          onClick={() => {
-            write?.()
-          }}
-        >
-          Bridge
-        </Button>
+      <CardFooter className="flex">
+        {chain?.id === l1Chain.id ? (
+          <Button
+            className="w-full"
+            disabled={isLoading || !write || isConfirmationLoading}
+            onClick={() => {
+              write?.()
+            }}
+          >
+            Bridge
+          </Button>
+        ) : (
+          <SwitchToChainButton chain={l1Chain} />
+        )}
       </CardFooter>
     </Card>
   )
