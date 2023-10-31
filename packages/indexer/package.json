@@ -1,4 +1,5 @@
 {
+  "name": "@superchain-testnet-tools/indexer",
   "private": true,
   "scripts": {
     "dev": "ponder dev",

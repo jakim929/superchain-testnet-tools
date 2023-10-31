@@ -23,3 +23,5 @@ dev-dist
 *.sw?
 
 .env
+
+.nx

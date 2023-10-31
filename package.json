@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build:frontend": "cd packages/frontend && pnpm run build",
     "dev": "concurrently -n contracts,frontend -c blue,green \"cd packages/contracts && pnpm run dev\" \"cd packages/frontend && pnpm run dev\"",
     "format": "biome format . --write",
     "format:check": "biome format .",
@@ -14,7 +13,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.2.2",
     "concurrently": "^8.2.1",
-    "nx": "16.10.0",
+    "nx": "17.0.2",
     "typescript": "^5.0.2"
   }
 }
