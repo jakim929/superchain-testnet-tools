@@ -1,8 +1,7 @@
-import { opStackChainL2PredeployContracts } from '@/chains/opStackChainL2PredeployContracts'
-import { OpStackChain } from '@/chains/types/OpStackChain'
-import { OpStackChainL1Contracts } from '@/chains/types/OpStackChainContracts'
-import { baseSepolia } from 'viem/chains'
-import { sepolia } from 'wagmi'
+import { opStackChainL2PredeployContracts } from './opStackChainL2PredeployContracts'
+import { OpStackChain } from './types/OpStackChain'
+import { OpStackChainL1Contracts } from './types/OpStackChainContracts'
+import { baseSepolia, sepolia } from 'viem/chains'
 
 export const baseSepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
   l1CrossDomainMessenger: {

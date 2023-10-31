@@ -1,6 +1,5 @@
-import { opStackChains } from '@/chains/opStackChains'
-import { OpStackChain } from '@/chains/types/OpStackChain'
 import { Button } from '@/components/ui/button'
+import { OpStackChain, opStackChains } from '@superchain-testnet-tools/chains'
 import {
   Card,
   CardContent,
@@ -18,6 +17,8 @@ import {
   Address,
   Chain,
   Hex,
+  Log,
+  decodeEventLog,
   encodeFunctionData,
   formatEther,
   parseEther,
@@ -349,7 +350,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     })
   })
 
-  const { isLoading: isConfirmationLoading } = useWaitForTransaction({
+  const { isLoading: isConfirmationLoading, data } = useWaitForTransaction({
     hash: response?.hash,
     confirmations: 5,
     onSuccess: () => {
@@ -372,6 +373,34 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
       })
     },
   })
+
+  console.log('data', data)
+  const testLog: Log = {
+    address: '0x5fd6c8d6756c3327f7a368f1cfbc7c003bc7efc9',
+    topics: [
+      '0xcb0f7ffd78f9aee47a248fae8db181db6eee833039123e026dcbff529522e52a',
+      '0x0000000000000000000000008a986ce389686dd140a5fd834b8b25d9d053d0fe',
+    ],
+    data: '0x000000000000000000000000ca11bde05977b3631167028862be2a173976ca110000000000000000000000000000000000000000000000000000000000000080000100000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000f42400000000000000000000000000000000000000000000000000000000000000000',
+    blockNumber: 4560802n,
+    transactionHash:
+      '0xedd529ca6accf66020b3b936d9af436bc896efeb35d2d4ad4c43a86e803e49d0',
+    transactionIndex: 18,
+    blockHash:
+      '0x86c278001b48f6ad7566c96e49ba35012994f8cef4b5a8f99883fa3b43379078',
+    logIndex: 50,
+    removed: false,
+  }
+
+  const result = decodeEventLog({
+    abi: L1CrossDomainMessengerAbi,
+    data: testLog.data,
+    topics: testLog.topics,
+  })
+
+  result.eventName
+
+  console.log(result)
 
   return (
     <Card className="flex-1">

@@ -1,6 +1,6 @@
-import { OpStackChain } from '@/chains/types/OpStackChain'
-import { OpStackChainL1Contracts } from '@/chains/types/OpStackChainContracts'
-import { opStackChainL2PredeployContracts } from '@/chains/opStackChainL2PredeployContracts'
+import { OpStackChain } from './types/OpStackChain'
+import { OpStackChainL1Contracts } from './types/OpStackChainContracts'
+import { opStackChainL2PredeployContracts } from './opStackChainL2PredeployContracts'
 import { baseGoerli, goerli } from 'viem/chains'
 
 export const baseGoerliOpStackChainL1Contracts: OpStackChainL1Contracts = {

@@ -30,9 +30,11 @@
     "react-router-dom": "^6.17.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
-    "viem": "^1.0.0",
+    "viem": "^1.2.6",
     "wagmi": "^1.1.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.4",
+    "@superchain-testnet-tools/chains": "*"
   },
   "devDependencies": {
     "@types/node": "^20.8.8",

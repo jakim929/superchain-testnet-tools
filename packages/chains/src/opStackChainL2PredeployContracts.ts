@@ -1,4 +1,4 @@
-import { OpStackChainL2PredeployContracts } from '@/chains/types/OpStackChainContracts'
+import { OpStackChainL2PredeployContracts } from './types/OpStackChainContracts'
 
 export const opStackChainL2PredeployContracts: OpStackChainL2PredeployContracts =
   {

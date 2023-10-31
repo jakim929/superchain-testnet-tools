@@ -1,0 +1,85 @@
+# The entity types defined below map to database tables.
+# The functions you write as event handlers inside the `src/` directory are responsible for creating and updating records in those tables.
+# Your schema will be more flexible and powerful if it accurately models the logical relationships in your application's domain.
+# Visit the [documentation](https://ponder.sh/guides/design-your-schema) or the [`examples/`](https://github.com/0xOlias/ponder/tree/main/examples) directory for further guidance on designing your schema.
+
+type OpStackChain @entity {
+  id: Int! # `OpStackChain_${l2ChainId}`
+  l1ChainId: Int!
+  l2ChainId: Int!
+}
+
+enum CrossDomainMessageStatus {
+  SENT
+  RELAYED
+  FAILED
+}
+
+type CrossDomainMessage @entity {
+  id: String! # targetChainID_messageHash + sourceChainId + targetChainId 
+  opStackChain: OpStackChain!
+  status: CrossDomainMessageStatus!
+  sourceChainId: Int!
+  targetChainId: Int!
+  target: String!
+  sender: String!
+  message: String!
+  messageNonce: BigInt!
+  gasLimit: BigInt!
+  value: BigInt!
+  lastUpdatedAtBlockTimestamp: Int!
+  sentMessageEvent: SentMessageEvent!
+  sentMessageExtension1Event: SentMessageExtension1Event!
+  relayedMessageEvent: RelayedMessageEvent
+  failedRelayedMessageEvent: FailedRelayedMessageEvent
+}
+
+type SentMessageEvent @entity {
+  id: String! # `SentMessageEvent_sourceChainId_targetChainId_${log id}`
+  opStackChain: OpStackChain!
+  sourceChainId: Int!
+  targetChainId: Int!
+  target: String!
+  sender: String!
+  message: String!
+  messageNonce: BigInt!
+  gasLimit: BigInt!
+  blockTimestamp: Int! 
+  transactionHash: String!
+  logIndex: Int! # hacky: this will be used to find the corresponding L1SentMessageExtension1Event
+}
+
+type SentMessageExtension1Event @entity {
+  id: String! # `SentMessageExtension1Event_sourceChainId_targetChainId_${log id}`
+  opStackChain: OpStackChain!
+  sourceChainId: Int!
+  targetChainId: Int!
+  sender: String!
+  value: BigInt!
+  blockTimestamp: Int! 
+  transactionHash: String!
+  logIndex: Int!
+}
+
+type RelayedMessageEvent @entity {
+  id: String! # `RelayedMessageEvent_sourceChainId_targetChainId_${log id}`
+  opStackChain: OpStackChain!
+  sourceChainId: Int!
+  targetChainId: Int!
+  msgHash: String!
+  blockTimestamp: Int! 
+  transactionHash: String!
+  logIndex: Int!
+}
+
+
+type FailedRelayedMessageEvent @entity {
+  id: String! # `FailedRelayedMessageEvent_sourceChainId_targetChainId_${log id}`
+  opStackChain: OpStackChain!
+  sourceChainId: Int!
+  targetChainId: Int!
+  msgHash: String!
+  blockTimestamp: Int! 
+  transactionHash: String!
+  logIndex: Int! 
+}

@@ -1,6 +1,6 @@
-import { opStackChainL2PredeployContracts } from '@/chains/opStackChainL2PredeployContracts'
-import { OpStackChain } from '@/chains/types/OpStackChain'
-import { OpStackChainL1Contracts } from '@/chains/types/OpStackChainContracts'
+import { opStackChainL2PredeployContracts } from './opStackChainL2PredeployContracts'
+import { OpStackChain } from './types/OpStackChain'
+import { OpStackChainL1Contracts } from './types/OpStackChainContracts'
 import { defineChain } from 'viem'
 import { sepolia } from 'viem/chains'
 import { formattersOptimism } from 'viem/chains/utils'
@@ -8,6 +8,7 @@ import { formattersOptimism } from 'viem/chains/utils'
 export const orderlySepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
     address: '0x5FD6C8D6756C3327f7A368F1cfbc7c003BC7EFC9',
+    blockCreated: 4051204,
   },
   l1StandardBridge: {
     address: '0x1Af0494040d6904A9F3EE21921de4b359C736333',

@@ -1,5 +1,4 @@
-import { opStackChains } from '@/chains/opStackChains'
-import { OpStackChain } from '@/chains/types/OpStackChain'
+import { OpStackChain, opStackChains } from '@superchain-testnet-tools/chains'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 

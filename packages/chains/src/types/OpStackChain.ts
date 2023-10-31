@@ -1,7 +1,7 @@
 import {
   OpStackChainL1Contracts,
   OpStackChainL2PredeployContracts,
-} from '@/chains/types/OpStackChainContracts'
+} from './OpStackChainContracts'
 import { Chain } from 'viem'
 
 export type OpStackChain = {

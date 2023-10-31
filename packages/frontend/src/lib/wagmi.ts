@@ -3,7 +3,7 @@ import { getDefaultConnectors } from 'connectkit'
 import { configureChains, createConfig, sepolia } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { goerli } from 'wagmi/chains'
-import { opStackChains } from '@/chains/opStackChains'
+import { opStackChains } from '@superchain-testnet-tools/chains'
 
 // const chainById: Record<number, Chain> = {
 //   [optimismGoerli.id]: optimismGoerli,
