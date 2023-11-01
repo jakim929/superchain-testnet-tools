@@ -1,6 +1,7 @@
 import { OpStackChain as OpStackChainModel, ponder } from '@/generated'
 import { Model } from '@ponder/core'
-import { OpStackChain, opStackChains } from '@superchain-testnet-tools/chains'
+import { OpStackChain } from '@superchain-testnet-tools/chains'
+import { indexedOpStackChains } from '@superchain-testnet-tools/indexed-chains'
 
 const createOpStackChainEntry = async (
   model: Model<OpStackChainModel>,
@@ -23,7 +24,7 @@ ponder.on('setup', async ({ context }) => {
   const { OpStackChain } = entities
 
   await Promise.all([
-    opStackChains.map(async (opStackChain) =>
+    indexedOpStackChains.map(async (opStackChain) =>
       createOpStackChainEntry(OpStackChain, opStackChain),
     ),
   ])

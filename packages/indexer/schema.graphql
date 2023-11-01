@@ -19,6 +19,7 @@ type CrossDomainMessage @entity {
   id: String! # targetChainID_messageHash + sourceChainId + targetChainId 
   opStackChain: OpStackChain!
   status: CrossDomainMessageStatus!
+  msgHash: String!
   sourceChainId: Int!
   targetChainId: Int!
   target: String!

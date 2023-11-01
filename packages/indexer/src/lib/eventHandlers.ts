@@ -163,9 +163,19 @@ export const getSentMessageExtension1EventHandler = ({
       },
     })
 
+    const msgHash = calculateMsgHash({
+      nonce: sentMessageEvent.messageNonce,
+      sender: sentMessageEvent.sender as Address,
+      target: sentMessageEvent.target as Address,
+      value: event.params.value,
+      gasLimit: sentMessageEvent.gasLimit,
+      data: sentMessageEvent.message as Hex,
+    })
+
     const data = {
       opStackChain: l2ChainId,
       status: 'SENT' as const,
+      msgHash,
       sourceChainId: sourceChainId,
       targetChainId: targetChainId,
       target: sentMessageEvent.target,
@@ -179,18 +189,10 @@ export const getSentMessageExtension1EventHandler = ({
       sentMessageExtension1Event: sentMessageExtension1EventKey,
     }
 
-    const msgHash = calculateMsgHash({
-      nonce: data.messageNonce,
-      sender: data.sender as Address,
-      target: data.target as Address,
-      value: data.value,
-      gasLimit: data.gasLimit,
-      data: data.message as Hex,
-    })
 
     await CrossDomainMessage.create({
       id: getCrossDomainMessageKey({
-        msgHash: msgHash,
+        msgHash,
         sourceChainId,
         targetChainId,
       }),
