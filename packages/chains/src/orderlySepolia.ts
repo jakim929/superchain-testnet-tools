@@ -5,7 +5,7 @@ import { defineChain } from 'viem'
 import { sepolia } from 'viem/chains'
 import { formattersOptimism } from 'viem/chains/utils'
 
-export const orderlySepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
+export const orderlySepoliaOpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
     address: '0x5FD6C8D6756C3327f7A368F1cfbc7c003BC7EFC9',
     blockCreated: 4051204,
@@ -13,7 +13,7 @@ export const orderlySepoliaOpStackChainL1Contracts: OpStackChainL1Contracts = {
   l1StandardBridge: {
     address: '0x1Af0494040d6904A9F3EE21921de4b359C736333',
   },
-}
+} as const satisfies OpStackChainL1Contracts
 
 export const orderlySepolia = defineChain(
   {
@@ -43,9 +43,9 @@ export const orderlySepolia = defineChain(
   },
 )
 
-export const orderlySepoliaOpStackChain: OpStackChain = {
+export const orderlySepoliaOpStackChain = {
   l1Chain: sepolia,
   l2Chain: orderlySepolia,
   l1Contracts: orderlySepoliaOpStackChainL1Contracts,
   l2Contracts: opStackChainL2PredeployContracts,
-} as const
+} as const satisfies OpStackChain
