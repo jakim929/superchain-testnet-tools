@@ -46,6 +46,8 @@ export const config: Config = {
       name: sepolia.network,
       chainId: sepolia.id,
       transport: http(process.env.SEPOLIA_HTTP_RPC_URL),
+      maxRpcRequestConcurrency: 2,
+      pollingInterval: 3000,
     },
     {
       name: optimismSepolia.network,
