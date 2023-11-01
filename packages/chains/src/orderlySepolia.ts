@@ -12,6 +12,7 @@ export const orderlySepoliaOpStackChainL1Contracts = {
   },
   l1StandardBridge: {
     address: '0x1Af0494040d6904A9F3EE21921de4b359C736333',
+    blockCreated: 4051204,
   },
 } as const satisfies OpStackChainL1Contracts
 

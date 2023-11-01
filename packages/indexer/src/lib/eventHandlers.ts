@@ -75,8 +75,6 @@ export const getSentMessageEventHandler = ({
   targetChainId: number
 }): SentMessageEventHandler => {
   return async ({ event, context }) => {
-    console.log(event.log.id)
-
     const { SentMessageEvent } = context.entities
 
     await SentMessageEvent.create({
@@ -115,8 +113,6 @@ export const getSentMessageExtension1EventHandler = ({
   targetChainId: number
 }): SentMessageExtension1EventHandler => {
   return async ({ event, context }) => {
-    console.log('SentMessageExtension1', event.log.id, event)
-
     const { SentMessageExtension1Event, SentMessageEvent, CrossDomainMessage } =
       context.entities
 
@@ -140,7 +136,10 @@ export const getSentMessageExtension1EventHandler = ({
     const sentMessageEvent = results[0]
 
     if (!sentMessageEvent) {
-      console.log('returning early')
+      console.error(
+        '[SentMessageExtension1EventHandler]: returning early for log',
+        event.log.logIndex,
+      )
       return
     }
 
@@ -189,8 +188,6 @@ export const getSentMessageExtension1EventHandler = ({
       data: data.message as Hex,
     })
 
-    console.log('msgHash', msgHash)
-
     await CrossDomainMessage.create({
       id: getCrossDomainMessageKey({
         msgHash: msgHash,
@@ -215,8 +212,6 @@ export const getRelayedMessageEventHandler = ({
   targetChainId: number
 }): RelayedMessageEventHandler => {
   return async ({ event, context }) => {
-    console.log(event.log.id)
-
     const { RelayedMessageEvent, CrossDomainMessage } = context.entities
 
     const eventId = getRelayedMessageEventKey({
@@ -237,13 +232,6 @@ export const getRelayedMessageEventHandler = ({
         logIndex: event.log.logIndex,
       },
     })
-
-    console.log(
-      'updating RelayedMessage',
-      sourceChainId,
-      targetChainId,
-      event.params.msgHash,
-    )
 
     await CrossDomainMessage.update({
       id: getCrossDomainMessageKey({
@@ -273,8 +261,6 @@ export const getFailedRelayedMessageEventHandler = ({
   targetChainId: number
 }): FailedRelayedMessageEventHandler => {
   return async ({ event, context }) => {
-    console.log(event.log.id)
-
     const { RelayedMessageEvent, CrossDomainMessage } = context.entities
 
     const eventId = getFailedRelayedMessageEventKey({
@@ -295,13 +281,6 @@ export const getFailedRelayedMessageEventHandler = ({
         logIndex: event.log.logIndex,
       },
     })
-
-    console.log(
-      'updating FailedRelayedMessage',
-      sourceChainId,
-      targetChainId,
-      event.params.msgHash,
-    )
 
     await CrossDomainMessage.update({
       id: getCrossDomainMessageKey({

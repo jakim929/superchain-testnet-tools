@@ -6,9 +6,11 @@ import { baseGoerli, goerli } from 'viem/chains'
 export const baseGoerliOpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
     address: '0x8e5693140eA606bcEB98761d9beB1BC87383706D',
+    blockCreated: 8411116,
   },
   l1StandardBridge: {
     address: '0xfA6D8Ee5BE770F84FC001D098C4bD604Fe01284a',
+    blockCreated: 8411116,
   },
 } as const satisfies OpStackChainL1Contracts
 

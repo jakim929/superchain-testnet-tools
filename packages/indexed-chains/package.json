@@ -1,0 +1,19 @@
+{
+  "name": "@superchain-testnet-tools/indexed-chains",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "module": "dist/index.mjs",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "viem": "^1.2.6",
+    "@superchain-testnet-tools/chains": "*"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0"
+  }
+}

@@ -2,7 +2,7 @@ import { OpStackChain as OpStackChainModel, ponder } from '@/generated'
 import { Model } from '@ponder/core'
 import { OpStackChain, opStackChains } from '@superchain-testnet-tools/chains'
 
-const createOpStackChain = async (
+const createOpStackChainEntry = async (
   model: Model<OpStackChainModel>,
   opStackChain: OpStackChain,
 ) => {
@@ -15,6 +15,7 @@ const createOpStackChain = async (
   })
 }
 
+// this thing only runs once. so when adding a new chain, run a migration
 ponder.on('setup', async ({ context }) => {
   const { entities } = context
   console.log('Setting up...')
@@ -23,7 +24,7 @@ ponder.on('setup', async ({ context }) => {
 
   await Promise.all([
     opStackChains.map(async (opStackChain) =>
-      createOpStackChain(OpStackChain, opStackChain),
+      createOpStackChainEntry(OpStackChain, opStackChain),
     ),
   ])
 })

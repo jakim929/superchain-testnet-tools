@@ -4,6 +4,12 @@
     "build": {
       "dependsOn": ["^build"],
       "cache": true
+    },
+    "dev": {
+      "dependsOn": ["^build"]
+    },
+    "start": {
+      "dependsOn": ["^build"]
     }
   },
   "affected": {

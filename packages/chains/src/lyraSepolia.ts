@@ -8,9 +8,11 @@ import { formattersOptimism } from 'viem/chains/utils'
 const lyraSepoliaOpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
     address: '0x28976A1DF6e6689Bfe555780CD46dcFcF5552979',
+    blockCreated: 4020876,
   },
   l1StandardBridge: {
     address: '0x915f179A77FB2e1AeA8b56Ebc0D75A7e1A8a7A17',
+    blockCreated: 4020876,
   },
 } as const satisfies OpStackChainL1Contracts
 

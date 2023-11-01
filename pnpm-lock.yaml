@@ -153,6 +153,19 @@ importers:
         specifier: ^4.4.5
         version: 4.5.0(@types/node@20.8.8)
 
+  packages/indexed-chains:
+    dependencies:
+      '@superchain-testnet-tools/chains':
+        specifier: '*'
+        version: link:../chains
+      viem:
+        specifier: ^1.2.6
+        version: 1.16.6(typescript@5.2.2)(zod@3.22.4)
+    devDependencies:
+      tsup:
+        specifier: ^7.2.0
+        version: 7.2.0(typescript@5.2.2)
+
   packages/indexer:
     dependencies:
       '@ponder/core':
@@ -161,6 +174,9 @@ importers:
       '@superchain-testnet-tools/chains':
         specifier: '*'
         version: link:../chains
+      '@superchain-testnet-tools/indexed-chains':
+        specifier: '*'
+        version: link:../indexed-chains
     devDependencies:
       '@types/node':
         specifier: ^18.11.18
