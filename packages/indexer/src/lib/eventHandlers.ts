@@ -128,6 +128,7 @@ export const getSentMessageExtension1EventHandler = ({
           equals: event.transaction.hash,
         },
         logIndex: {
+          // TODO: this is a hack to match the SentMessageExtension1Event to the SentMessageEvent
           equals: event.log.logIndex - 1,
         },
       },
@@ -172,6 +173,12 @@ export const getSentMessageExtension1EventHandler = ({
       data: sentMessageEvent.message as Hex,
     })
 
+    const crossDomainMessageKey = getCrossDomainMessageKey({
+      msgHash,
+      sourceChainId,
+      targetChainId,
+    })
+
     const data = {
       opStackChain: l2ChainId,
       status: 'SENT' as const,
@@ -187,15 +194,11 @@ export const getSentMessageExtension1EventHandler = ({
       lastUpdatedAtBlockTimestamp: Number(event.block.timestamp),
       sentMessageEvent: sentMessageEvent.id,
       sentMessageExtension1Event: sentMessageExtension1EventKey,
+      transactionHashes: [event.transaction.hash],
     }
 
-
     await CrossDomainMessage.create({
-      id: getCrossDomainMessageKey({
-        msgHash,
-        sourceChainId,
-        targetChainId,
-      }),
+      id: crossDomainMessageKey,
       data,
     })
   }
@@ -235,17 +238,23 @@ export const getRelayedMessageEventHandler = ({
       },
     })
 
+    const crossDomainMessageKey = getCrossDomainMessageKey({
+      msgHash: event.params.msgHash,
+      sourceChainId,
+      targetChainId,
+    })
+
     await CrossDomainMessage.update({
-      id: getCrossDomainMessageKey({
-        msgHash: event.params.msgHash,
-        sourceChainId,
-        targetChainId,
-      }),
-      data: {
+      id: crossDomainMessageKey,
+      data: ({ current }) => ({
         status: 'RELAYED',
         lastUpdatedAtBlockTimestamp: Number(event.block.timestamp),
         relayedMessageEvent: eventId,
-      },
+        transactionHashes: [
+          ...current.transactionHashes,
+          event.transaction.hash,
+        ],
+      }),
     })
   }
 }
@@ -284,17 +293,23 @@ export const getFailedRelayedMessageEventHandler = ({
       },
     })
 
+    const crossDomainMessageKey = getCrossDomainMessageKey({
+      msgHash: event.params.msgHash,
+      sourceChainId,
+      targetChainId,
+    })
+
     await CrossDomainMessage.update({
-      id: getCrossDomainMessageKey({
-        msgHash: event.params.msgHash,
-        sourceChainId,
-        targetChainId,
-      }),
-      data: {
+      id: crossDomainMessageKey,
+      data: ({ current }) => ({
         status: 'FAILED',
         lastUpdatedAtBlockTimestamp: Number(event.block.timestamp),
         failedRelayedMessageEvent: eventId,
-      },
+        transactionHashes: [
+          ...current.transactionHashes,
+          event.transaction.hash,
+        ],
+      }),
     })
   }
 }

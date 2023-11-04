@@ -1,6 +1,7 @@
 import { NavBarLayout } from '@/layouts/NavBarLayout'
 import { BridgePage } from '@/pages/BridgePage'
 import { ChainsPage } from '@/pages/ChainsPage'
+import { CrossDomainTransactionPage } from '@/pages/CrossDomainTransactionPage'
 import { MessagePasserPage } from '@/pages/MessagePasserPage'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: '/chains',
         element: <ChainsPage />,
+      },
+      {
+        path: '/tx/:transactionHash',
+        element: <CrossDomainTransactionPage />,
       },
     ],
   },

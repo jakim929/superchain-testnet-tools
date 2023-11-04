@@ -1,3 +1,5 @@
+import { useCrossDomainMessagesForTransactionHash } from '@/lib/getCrossDomainMessagesForTransactionHash'
+import { useEffect } from 'react'
 import {
   Address,
   Hex,
@@ -9,6 +11,7 @@ import {
   toHex,
 } from 'viem'
 
+// TODO: refactor in to common-ts
 const calculateMsgHash = ({
   nonce,
   sender,
@@ -57,17 +60,10 @@ const calculateMsgHash = ({
 }
 
 export const MessagePasserPage = () => {
-  console.log(
-    calculateMsgHash({
-      nonce: BigInt(
-        '1766847064778384329583297500742918515827483896875618958121606201292619822',
-      ),
-      sender: '0xcA11bde05977b3631167028862bE2a173976CA11',
-      target: '0x8a986CE389686dd140a5FD834B8B25d9d053D0fe',
-      value: parseEther('0.01'),
-      gasLimit: BigInt('1000000'),
-      data: toHex(''),
-    }),
+  const result = useCrossDomainMessagesForTransactionHash(
+    '0x17b8b82bacec8b6f522f21c96d81a046c01dd1c25e41951502dcf3db5b1b8a93',
   )
+
+  console.log(result)
   return <div>Coming soon</div>
 }

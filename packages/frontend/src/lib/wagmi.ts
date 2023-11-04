@@ -1,9 +1,10 @@
 import { envVars } from '@/lib/envVars'
 import { getDefaultConnectors } from 'connectkit'
-import { configureChains, createConfig, sepolia } from 'wagmi'
+import { configureChains, createConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
-import { goerli } from 'wagmi/chains'
 import { opStackChains } from '@superchain-testnet-tools/chains'
+import { QueryClient } from '@tanstack/react-query'
+import { supportedChains } from '@/supportedChains'
 
 // const chainById: Record<number, Chain> = {
 //   [optimismGoerli.id]: optimismGoerli,
@@ -11,10 +12,9 @@ import { opStackChains } from '@superchain-testnet-tools/chains'
 //   [foundry.id]: foundry,
 // }
 
-const { chains, publicClient } = configureChains(
-  [sepolia, goerli, ...opStackChains.map((chain) => chain.l2Chain)],
-  [publicProvider()],
-)
+const { chains, publicClient } = configureChains(supportedChains, [
+  publicProvider(),
+])
 
 const connectors = getDefaultConnectors({
   chains: chains,
@@ -24,10 +24,13 @@ const connectors = getDefaultConnectors({
   walletConnectProjectId: envVars.VITE_WALLET_CONNECT_PROJECT_ID,
 })
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-})
+export const createWagmiConfig = (queryClient: QueryClient) => {
+  return createConfig({
+    autoConnect: true,
+    connectors,
+    publicClient,
+    queryClient: queryClient as any,
+  })
+}
 
 export { chains }

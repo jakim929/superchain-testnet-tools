@@ -4,7 +4,7 @@
 # Visit the [documentation](https://ponder.sh/guides/design-your-schema) or the [`examples/`](https://github.com/0xOlias/ponder/tree/main/examples) directory for further guidance on designing your schema.
 
 type OpStackChain @entity {
-  id: Int! # `OpStackChain_${l2ChainId}`
+  id: Int! # `l2ChainId`
   l1ChainId: Int!
   l2ChainId: Int!
 }
@@ -15,22 +15,27 @@ enum CrossDomainMessageStatus {
   FAILED
 }
 
+# query patterns
+# transactionHash => get all cross domain messages sent/received in that transaction
+# crossDomainMessage => get all related events & transaction hashes
+
 type CrossDomainMessage @entity {
   id: String! # targetChainID_messageHash + sourceChainId + targetChainId 
   opStackChain: OpStackChain!
   status: CrossDomainMessageStatus!
-  msgHash: String!
+  msgHash: Bytes!
   sourceChainId: Int!
   targetChainId: Int!
-  target: String!
-  sender: String!
-  message: String!
+  target: Bytes!
+  sender: Bytes!
+  message: Bytes!
   messageNonce: BigInt!
   gasLimit: BigInt!
   value: BigInt!
   lastUpdatedAtBlockTimestamp: Int!
-  sentMessageEvent: SentMessageEvent!
-  sentMessageExtension1Event: SentMessageExtension1Event!
+  transactionHashes: [Bytes!]!
+  sentMessageEvent: SentMessageEvent! 
+  sentMessageExtension1Event: SentMessageExtension1Event! 
   relayedMessageEvent: RelayedMessageEvent
   failedRelayedMessageEvent: FailedRelayedMessageEvent
 }
@@ -40,14 +45,14 @@ type SentMessageEvent @entity {
   opStackChain: OpStackChain!
   sourceChainId: Int!
   targetChainId: Int!
-  target: String!
-  sender: String!
-  message: String!
+  blockTimestamp: Int! 
+  transactionHash: Bytes!
+  logIndex: Int! # hacky: this will be used to find the corresponding L1SentMessageExtension1Event
+  target: Bytes!
+  sender: Bytes!
+  message: Bytes!
   messageNonce: BigInt!
   gasLimit: BigInt!
-  blockTimestamp: Int! 
-  transactionHash: String!
-  logIndex: Int! # hacky: this will be used to find the corresponding L1SentMessageExtension1Event
 }
 
 type SentMessageExtension1Event @entity {
@@ -55,11 +60,11 @@ type SentMessageExtension1Event @entity {
   opStackChain: OpStackChain!
   sourceChainId: Int!
   targetChainId: Int!
-  sender: String!
-  value: BigInt!
   blockTimestamp: Int! 
-  transactionHash: String!
+  transactionHash: Bytes!
   logIndex: Int!
+  sender: Bytes!
+  value: BigInt!
 }
 
 type RelayedMessageEvent @entity {
@@ -67,20 +72,19 @@ type RelayedMessageEvent @entity {
   opStackChain: OpStackChain!
   sourceChainId: Int!
   targetChainId: Int!
-  msgHash: String!
   blockTimestamp: Int! 
-  transactionHash: String!
+  transactionHash: Bytes!
   logIndex: Int!
+  msgHash: Bytes!
 }
-
 
 type FailedRelayedMessageEvent @entity {
   id: String! # `FailedRelayedMessageEvent_sourceChainId_targetChainId_${log id}`
   opStackChain: OpStackChain!
   sourceChainId: Int!
   targetChainId: Int!
-  msgHash: String!
   blockTimestamp: Int! 
-  transactionHash: String!
+  transactionHash: Bytes!
   logIndex: Int! 
+  msgHash: Bytes!
 }

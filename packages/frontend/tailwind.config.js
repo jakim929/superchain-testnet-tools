@@ -74,6 +74,10 @@ module.exports = {
         'bottom-outline-black': 'inset 0 -2px 0 0 black',
         'bottom-outline-grey': 'inset 0 -2px 0 0 #cbd5e1',
       },
+      flex: {
+        2: '2 2 0%',
+        3: '3 3 0%',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
