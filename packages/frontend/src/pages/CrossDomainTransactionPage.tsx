@@ -72,7 +72,7 @@ const CrossDomainMessageCard = ({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{truncateHash(msgHash)}</CardTitle>
-        <StatusChip status="FAILED" />
+        <StatusChip status={status} />
       </CardHeader>
       <CardContent className="flex flex-col">
         <div className="grid grid-cols-2 gap-4">
