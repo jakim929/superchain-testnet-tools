@@ -1,5 +1,5 @@
 {
-  "name": "@superchain-testnet-tools/contract-metadata-lookup",
+  "name": "@superchain-testnet-tools/contract-lookup",
   "private": true,
   "version": "0.0.0",
   "scripts": {
