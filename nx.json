@@ -10,7 +10,14 @@
     },
     "start": {
       "dependsOn": ["^build"]
+    },
+    "start:service": {
+      "dependsOn": ["^build"]
+    },
+    "start:worker": {
+      "dependsOn": ["^build"]
     }
+
   },
   "affected": {
     "defaultBase": "main"
