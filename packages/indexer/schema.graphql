@@ -34,7 +34,8 @@ type CrossDomainMessage @entity {
   value: BigInt!
   lastUpdatedAtBlockTimestamp: Int!
   transactionHashes: [Bytes!]!
-  sentMessageEvent: SentMessageEvent! 
+  sentMessageEventTransactionFrom: Bytes!
+  sentMessageEvent: SentMessageEvent!
   sentMessageExtension1Event: SentMessageExtension1Event! 
   relayedMessageEvent: RelayedMessageEvent
   failedRelayedMessageEvent: FailedRelayedMessageEvent

@@ -192,6 +192,7 @@ export const getSentMessageExtension1EventHandler = ({
       gasLimit: sentMessageEvent.gasLimit,
       value: event.params.value,
       lastUpdatedAtBlockTimestamp: Number(event.block.timestamp),
+      sentMessageEventTransactionFrom: event.transaction.from,
       sentMessageEvent: sentMessageEvent.id,
       sentMessageExtension1Event: sentMessageExtension1EventKey,
       transactionHashes: [event.transaction.hash],
