@@ -31,7 +31,7 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0(typescript@5.2.2)
 
-  packages/contract-metadata-lookup:
+  packages/contract-lookup:
     dependencies:
       '@bull-board/api':
         specifier: ^5.9.1
