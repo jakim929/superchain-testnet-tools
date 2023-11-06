@@ -260,6 +260,9 @@ importers:
       '@superchain-testnet-tools/chains':
         specifier: '*'
         version: link:../chains
+      '@superchain-testnet-tools/common-ts':
+        specifier: '*'
+        version: link:../common-ts
       '@superchain-testnet-tools/indexed-chains':
         specifier: '*'
         version: link:../indexed-chains

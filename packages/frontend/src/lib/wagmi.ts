@@ -1,4 +1,4 @@
-import { envVars } from '@/lib/envVars'
+import { envVars } from '@/envVars'
 import { getDefaultConnectors } from 'connectkit'
 import { configureChains, createConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'

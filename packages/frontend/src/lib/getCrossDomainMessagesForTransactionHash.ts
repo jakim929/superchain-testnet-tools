@@ -3,7 +3,7 @@ import { gql, request } from 'graphql-request'
 import { z } from 'zod'
 import { CrossDomainMessageSchema } from '@/lib/IndexerSchema'
 import { useQuery } from '@tanstack/react-query'
-import { envVars } from '@/lib/envVars'
+import { envVars } from '@/envVars'
 
 const getCrossDomainMessagesByTransactionHashQuery = gql`
   query MyQuery($transactionHash: String) {

@@ -1,6 +1,6 @@
 import { AppType } from '@/generated'
 import { Address, Hex } from 'viem'
-import { calculateMsgHash } from '@/src/lib/calculateMsgHash'
+import { getCrossDomainMessageHash } from '@superchain-testnet-tools/common-ts'
 
 const getCrossDomainMessageKey = ({
   msgHash,
@@ -164,7 +164,7 @@ export const getSentMessageExtension1EventHandler = ({
       },
     })
 
-    const msgHash = calculateMsgHash({
+    const msgHash = getCrossDomainMessageHash({
       nonce: sentMessageEvent.messageNonce,
       sender: sentMessageEvent.sender as Address,
       target: sentMessageEvent.target as Address,

@@ -38,6 +38,7 @@ export const registerRoutes = (
 
     const fetchResult = await fetchContractMetadata(chainId, address).catch(
       (err) => {
+        console.error(err)
         reply.code(500).send()
       },
     )

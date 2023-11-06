@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ponder/core": "0.0.93-next.5",
+    "@superchain-testnet-tools/common-ts": "*",
     "@superchain-testnet-tools/chains": "*",
     "@superchain-testnet-tools/indexed-chains": "*"
   },

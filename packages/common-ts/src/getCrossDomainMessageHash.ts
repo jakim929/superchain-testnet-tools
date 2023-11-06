@@ -7,7 +7,7 @@ import {
   keccak256,
 } from 'viem'
 
-export const calculateMsgHash = ({
+export const getCrossDomainMessageHash = ({
   nonce,
   sender,
   target,
