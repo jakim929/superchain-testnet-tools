@@ -9,13 +9,13 @@
       "dependsOn": ["^build"]
     },
     "start": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "start:service": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "start:worker": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     }
 
   },
