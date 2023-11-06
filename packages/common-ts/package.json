@@ -1,0 +1,19 @@
+{
+  "name": "@superchain-testnet-tools/common-ts",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "module": "dist/index.mjs",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "viem": "^1.16.6",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0"
+  }
+}

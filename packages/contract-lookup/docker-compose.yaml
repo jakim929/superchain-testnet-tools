@@ -8,3 +8,22 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+  postgres-app:
+    image: "postgres:latest"
+    ports:
+      - "5433:5432" # Host 5432 is used by indexer db 
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=username
+      - POSTGRES_DB=db_prod
+      - PGDATA=/data/postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "db_prod"]
+      timeout: 20s
+      retries: 3
+      start_period: 10s  
+    volumes:
+      - superchain-testnet-tools-chain-lookup-postgres-data:/data/postgres
+
+volumes:
+  superchain-testnet-tools-chain-lookup-postgres-data:

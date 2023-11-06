@@ -1,4 +1,4 @@
-import { indexedOpStackChains } from '@superchain-testnet-tools/indexed-chains'
+import { indexedOpStackChains } from './IndexedOpStackChains'
 
 const indexedChainsWithDuplicates = indexedOpStackChains.flatMap(
   (opStackChain) => {

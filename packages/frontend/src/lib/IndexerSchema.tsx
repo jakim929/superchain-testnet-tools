@@ -1,17 +1,6 @@
-import { Hex } from 'viem'
-
-import type { Address } from 'viem'
+import { IndexedChainId } from '@superchain-testnet-tools/indexed-chains'
+import { AddressSchema, HexSchema } from '@superchain-testnet-tools/common-ts'
 import { z } from 'zod'
-import { IndexedChainId } from '@/indexedChains'
-
-export const HexSchema = z
-  .string()
-  .refine((hex) => hex.startsWith('0x'))
-  .transform((x) => x as Hex)
-
-export const AddressSchema = HexSchema.refine(
-  (hex) => hex.length === 42,
-).transform((x) => x as Address)
 
 export const OpStackChainSchema = z.object({
   id: z.number(),

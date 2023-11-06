@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Chip } from '@/components/ui/chip'
-import { indexedChainById } from '@/indexedChains'
 import {
   CrossDomainMessageSubset,
   useCrossDomainMessagesForTransactionHash,
@@ -8,6 +7,7 @@ import {
 import { truncateHash } from '@/lib/truncateHash'
 import { useParams } from 'react-router-dom'
 import { Hex, formatEther } from 'viem'
+import { indexedChainById } from '@superchain-testnet-tools/indexed-chains'
 
 const StatusChip = ({
   status,

@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=username
       - PGDATA=/data/postgres
     volumes:
-      - superchain-testnet-tools-postgres-data:/data/postgres
+      - superchain-testnet-tools-indexer-postgres-data:/data/postgres
 
 volumes:
-  superchain-testnet-tools-postgres-data:
+  superchain-testnet-tools-indexer-postgres-data:
