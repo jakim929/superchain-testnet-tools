@@ -2,6 +2,7 @@
   "name": "@superchain-testnet-tools/indexer",
   "private": true,
   "scripts": {
+    "build": "echo no build",
     "dev": "docker compose up -d && ponder dev",
     "start": "ponder start",
     "codegen": "ponder codegen"
