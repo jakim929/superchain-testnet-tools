@@ -42,7 +42,9 @@ import { CheckCircle2, Loader2 } from 'lucide-react'
 import { AbiFunction } from 'abitype'
 import {
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
+  useSwitchNetwork,
   useWaitForTransaction,
 } from 'wagmi'
 import { z } from 'zod'
@@ -190,6 +192,28 @@ const DynamicInput = ({
   }
 }
 
+const SwitchNetworkButton = ({
+  chainId,
+}: {
+  chainId: IndexedChainId
+}) => {
+  const chainName = indexedChainById[chainId].name
+  const { switchNetwork, isLoading } = useSwitchNetwork()
+  if (!isLoading && !switchNetwork) {
+    return <div>Please switch the network to {chainName} on your wallet</div>
+  }
+  return (
+    <Button
+      className="flex gap-2 items-center"
+      onClick={() => switchNetwork?.(chainId)}
+      disabled={isLoading}
+    >
+      {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Switch
+      network to {chainName}
+    </Button>
+  )
+}
+
 const WriteContractFunctionDisplay = ({
   abiItem,
   address,
@@ -199,6 +223,7 @@ const WriteContractFunctionDisplay = ({
   address: Address
   chainId: IndexedChainId
 }) => {
+  const { chain } = useNetwork()
   const [functionParamByIndex, setFunctionParamByIndex] = useState<
     Record<number, any>
   >({})
@@ -206,6 +231,7 @@ const WriteContractFunctionDisplay = ({
   console.log(functionParamByIndex)
 
   const opStackChain = opStackChainByL2ChainId[chainId]
+  const sourceChainId = opStackChain.l1Chain.id
 
   const targetContractFunctionParams = abiItem.inputs.map(
     (_, i) => functionParamByIndex[i],
@@ -269,10 +295,18 @@ const WriteContractFunctionDisplay = ({
           )
         })}
       </div>
-      <Button onClick={() => write?.()} disabled={isDisabled} className="flex">
-        {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Send
-        message
-      </Button>
+      {chain?.id !== sourceChainId ? (
+        <SwitchNetworkButton chainId={sourceChainId} />
+      ) : (
+        <Button
+          onClick={() => write?.()}
+          disabled={isDisabled}
+          className="flex"
+        >
+          {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Send
+          message
+        </Button>
+      )}
     </div>
   )
 }
