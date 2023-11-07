@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build": "nx run-many -t build",
     "dev": "concurrently -n contracts,frontend,indexer,contract-lookup -c blue,green,yellow,red \"cd packages/contracts && pnpm run dev\" \"cd packages/frontend && pnpm run dev\" \"cd packages/indexer && echo starting indexer... && pnpm run dev &> '/dev/null'\" \"cd packages/contract-lookup && pnpm run dev\"",
     "format": "biome format . --write",
     "format:check": "biome format .",

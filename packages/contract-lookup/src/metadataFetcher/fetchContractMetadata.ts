@@ -30,17 +30,20 @@ export const fetchContractMetadata = async (
   chainId: SupportedChainId,
   address: Address,
 ): Promise<FetchedContractMetadata | null> => {
+  let result;
   if (etherscanSupportedChainIdSet.has(chainId as any)) {
-    return fetchContractMetadataFromEtherscan(
+    result = await fetchContractMetadataFromEtherscan(
       chainId as EtherscanSupportedChainId,
       address,
     )
-  } else if (blockscoutSupportedChainIdSet.has(chainId as any)) {
-    return fetchContractMetadataFromBlockscout(
+  }
+  
+  if (blockscoutSupportedChainIdSet.has(chainId as any) && !result) {
+    result = await fetchContractMetadataFromBlockscout(
       chainId as BlockscoutSupportedChainId,
       address,
     )
-  } else {
-    return null
-  }
+  } 
+
+  return result || null
 }

@@ -13,4 +13,5 @@ extra_output_files = [
 fs_permissions = [{ access = "read", path = "./"}]
 libs = ["node_modules", "lib"]
 
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

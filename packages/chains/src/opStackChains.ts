@@ -36,6 +36,13 @@ export const opStackChains = [
   lyraSepoliaOpStackChain,
 ]
 
+export const opStackChainByL2ChainId = opStackChains.reduce<
+  Record<number, OpStackChain>
+>((acc, opStackChain) => {
+  acc[opStackChain.l2Chain.id] = opStackChain
+  return acc
+}, {})
+
 export const sepoliaOpStackChainByL1CrossDomainMessengerAddress = opStackChains
   .filter((x) => x.l1Chain.id === sepolia.id)
   .reduce<Record<Address, OpStackChain>>((acc, opStackChain) => {
