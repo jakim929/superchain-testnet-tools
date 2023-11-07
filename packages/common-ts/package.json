@@ -10,7 +10,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "viem": "^1.16.6",
+    "viem": "^1.18.8",
     "zod": "^3.22.4"
   },
   "devDependencies": {

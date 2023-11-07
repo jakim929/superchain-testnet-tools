@@ -5,6 +5,7 @@ import { FastifyAdapter } from '@bull-board/fastify'
 import { Queue } from 'bullmq'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 
 export const initializeApiServer = async (
   db: NodePgDatabase,
@@ -12,6 +13,14 @@ export const initializeApiServer = async (
 ) => {
   const fastify = Fastify({
     logger: true,
+  })
+
+  await fastify.register(cors, {
+    origin: [
+      /^https?:\/\/([A-Za-z0-9\-\_\.]*).superchain.tools/,
+      /^http:\/\/localhost:5173/,
+      /^http:\/\/127\.0\.0\.1:5173/,
+    ],
   })
 
   // const serverAdapter = new FastifyAdapter()

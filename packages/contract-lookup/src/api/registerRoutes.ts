@@ -40,9 +40,18 @@ export const registerRoutes = (
       (err) => {
         console.error(err)
         reply.code(500).send()
+        throw Error('Failed to fetch contract metadata')
       },
     )
 
-    reply.code(200).send(fetchResult)
+    if (fetchResult === null) {
+      reply.code(404).send()
+      return
+    }
+
+    const { sourceCode, ...rest } = fetchResult
+
+    reply.code(200).send(rest)
+    return
   })
 }

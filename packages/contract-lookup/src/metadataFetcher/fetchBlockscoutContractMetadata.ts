@@ -56,10 +56,10 @@ const blockscoutConfigByChainId = blockscoutConfigs.reduce<
 
 const BlockscoutV2SmartContractResponseSchema = z.object({
   deployed_bytecode: z.string(),
-  abi: AbiSchema.nullable(),
-  minimal_proxy_address_hash: AddressSchema.nullable(),
-  name: z.string().nullable(),
-  source_code: z.string().nullable().nullable(),
+  abi: AbiSchema.nullable().optional(),
+  minimal_proxy_address_hash: AddressSchema.nullable().optional(),
+  name: z.string().nullable().optional(),
+  source_code: z.string().nullable().nullable().optional(),
 })
 
 const BlockscoutV2SmartContractResponseToContractMetadataSchema =
@@ -71,6 +71,7 @@ const BlockscoutV2SmartContractResponseToContractMetadataSchema =
       source_code,
       deployed_bytecode,
     }) => {
+      console.log(abi, source_code, name, minimal_proxy_address_hash)
       // means contract is deployed at this address but not verified
       if (!deployed_bytecode || !name || !source_code || !abi) {
         return null
@@ -78,7 +79,7 @@ const BlockscoutV2SmartContractResponseToContractMetadataSchema =
       return {
         source: 'blockscout' as const,
         abi,
-        implementationAddress: minimal_proxy_address_hash,
+        implementationAddress: minimal_proxy_address_hash || null,
         name,
         sourceCode: source_code,
       }
@@ -95,14 +96,17 @@ export const fetchContractMetadataFromBlockscout = async (
   if (result.status === 404) {
     return null
   }
-  if (result.status === 200) {
-    const response = await result.json()
-    return BlockscoutV2SmartContractResponseToContractMetadataSchema.parse(
-      response,
-    )
-  } else {
+  if (result.status !== 200) {
     throw Error(
       `[fetchContractMetadataFromBlockscout] Unexpected status code ${result.status}`,
     )
   }
+
+  const response = await result.json()
+  const { deployed_bytecode, ...rest } = response
+  console.log('rest', rest)
+
+  return BlockscoutV2SmartContractResponseToContractMetadataSchema.parse(
+    response,
+  )
 }

@@ -35,12 +35,12 @@ export const fetchContractMetadata = async (
       chainId as EtherscanSupportedChainId,
       address,
     )
-  }
-  if (blockscoutSupportedChainIdSet.has(chainId as any)) {
+  } else if (blockscoutSupportedChainIdSet.has(chainId as any)) {
     return fetchContractMetadataFromBlockscout(
       chainId as BlockscoutSupportedChainId,
       address,
     )
+  } else {
+    return null
   }
-  throw new Error(`Unsupported chainId: ${chainId}`)
 }
