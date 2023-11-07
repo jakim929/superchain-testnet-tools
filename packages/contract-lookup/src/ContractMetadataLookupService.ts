@@ -43,7 +43,7 @@ export class ContractMetadataLookupService {
   }
 
   async run() {
-    await this.apiServer.listen({ port: 3000 })
+    await this.apiServer.listen({ port: envVars.PORT })
 
     while (true) {
       await this.loop()
