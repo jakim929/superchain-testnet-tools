@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 const envVarSchema = z.object({
   PORT: z.coerce.number().default(3000),
+  HOST: z.coerce.string().default('0.0.0.0'),
   LOOP_INTERVAL_MS: z.coerce.number(),
   ETHEREUM_ETHERSCAN_API_KEY: z.string(),
   BASE_ETHERSCAN_API_KEY: z.string(),
