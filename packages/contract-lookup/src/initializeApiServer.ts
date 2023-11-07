@@ -17,7 +17,9 @@ export const initializeApiServer = async (
 
   await fastify.register(cors, {
     origin: [
-      /^https?:\/\/([A-Za-z0-9\-\_\.]*).superchain.tools/,
+      /^https:\/\/www\.superchain\.tools/,
+      /^https:\/\/superchain\.tools/,
+      /^https:\/\/superchain.tools/,
       /^http:\/\/localhost:5173/,
       /^http:\/\/127\.0\.0\.1:5173/,
     ],
