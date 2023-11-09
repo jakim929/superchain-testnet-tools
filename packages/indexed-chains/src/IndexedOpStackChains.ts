@@ -10,6 +10,10 @@ import {
 export const indexedOpStackChains = [
   optimismSepoliaOpStackChain,
   baseSepoliaOpStackChain,
+  orderlySepoliaOpStackChain,
+  zoraSepoliaOpStackChain,
+  lyraSepoliaOpStackChain,
+  modeSepoliaOpStackChain,
 ]
 
 export type IndexedOpStackChains = typeof indexedOpStackChains

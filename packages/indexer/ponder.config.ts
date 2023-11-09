@@ -1,5 +1,14 @@
 import type { Config } from '@ponder/core'
-import { IndexedOpStackChain, indexedOpStackChains } from '@superchain-testnet-tools/indexed-chains'
+import {
+  lyraSepoliaOpStackChain,
+  modeSepoliaOpStackChain,
+  orderlySepoliaOpStackChain,
+  zoraSepoliaOpStackChain,
+} from '@superchain-testnet-tools/chains'
+import {
+  IndexedOpStackChain,
+  indexedOpStackChains,
+} from '@superchain-testnet-tools/indexed-chains'
 import { http } from 'viem'
 import { baseSepolia, optimismSepolia, sepolia } from 'viem/chains'
 
@@ -63,10 +72,10 @@ export const config: Config = {
       maxRpcRequestConcurrency: 2,
       pollingInterval: 3000,
     },
-    // getL2PublicRpcUrlNetworkConfig(orderlySepoliaOpStackChain),
-    // getL2PublicRpcUrlNetworkConfig(zoraSepoliaOpStackChain),
-    // getL2PublicRpcUrlNetworkConfig(modeSepoliaOpStackChain),
-    // getL2PublicRpcUrlNetworkConfig(lyraSepoliaOpStackChain),
+    getL2PublicRpcUrlNetworkConfig(orderlySepoliaOpStackChain),
+    getL2PublicRpcUrlNetworkConfig(zoraSepoliaOpStackChain),
+    getL2PublicRpcUrlNetworkConfig(modeSepoliaOpStackChain),
+    getL2PublicRpcUrlNetworkConfig(lyraSepoliaOpStackChain),
   ],
   contracts: indexedOpStackChains.flatMap(getContractEventSources),
 }

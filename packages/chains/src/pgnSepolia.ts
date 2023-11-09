@@ -24,10 +24,10 @@ export const pgnSepolia = defineChain(
     nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
       default: {
-        http: ['https://rpc.sepolia.publicgoods.network'],
+        http: ['https://sepolia.publicgoods.network'],
       },
       public: {
-        http: ['https://rpc.sepolia.publicgoods.network'],
+        http: ['https://sepolia.publicgoods.network'],
       },
     },
     blockExplorers: {
