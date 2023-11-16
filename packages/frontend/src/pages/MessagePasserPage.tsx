@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/accordion'
 import { useContractMetadata } from '@/lib/getContractMetadata'
 import { useCrossDomainMessagesForTransactionHash } from '@/lib/getCrossDomainMessagesForTransactionHash'
-import { goerli, sepolia } from 'viem/chains'
+import { goerli, optimismSepolia, sepolia } from 'viem/chains'
 import {
   Select,
   SelectContent,
@@ -440,7 +440,7 @@ export const MessagePasserPage = () => {
   )
 
   const [selectedChainId, setSelectedChainId] = useState<IndexedChainId>(
-    supportedChainsForMessagePasser[1].id,
+    optimismSepolia.id,
   )
 
   const [targetAddressFormValue, setTargetAddressFormValue] = useState<string>(
