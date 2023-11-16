@@ -3,10 +3,20 @@ import { z } from 'zod'
 import { Abi as AbiSchema } from 'abitype/zod'
 import { baseSepolia, goerli, optimismSepolia, sepolia } from 'viem/chains'
 import { AddressSchema } from '@superchain-testnet-tools/common-ts'
+import {
+  lyraSepolia,
+  modeSepolia,
+  orderlySepolia,
+  zoraSepolia,
+} from '@superchain-testnet-tools/chains'
 
 type ChainBlockscoutConfig = {
   chainId: number
   apiUrl: string
+}
+
+const getApiUrl = (blockExplorerBaseUrl: string) => {
+  return `${blockExplorerBaseUrl}/api/v2`
 }
 
 const sepoliaBlockscoutConfig = {
@@ -29,11 +39,35 @@ const baseSepoliaBlockscoutConfig = {
   apiUrl: 'https://base-sepolia.blockscout.com/api/v2',
 } as const satisfies ChainBlockscoutConfig
 
+const orderlySepoliaBlockscoutConfig = {
+  chainId: orderlySepolia.id,
+  apiUrl: getApiUrl(orderlySepolia.blockExplorers.default.url),
+} as const satisfies ChainBlockscoutConfig
+
+const zoraSepoliaBlockscoutConfig = {
+  chainId: zoraSepolia.id,
+  apiUrl: getApiUrl(zoraSepolia.blockExplorers.default.url),
+} as const satisfies ChainBlockscoutConfig
+
+const modeSepoliaBlockscoutConfig = {
+  chainId: modeSepolia.id,
+  apiUrl: getApiUrl(modeSepolia.blockExplorers.default.url),
+} as const satisfies ChainBlockscoutConfig
+
+const lyraSepoliaBlockscoutConfig = {
+  chainId: lyraSepolia.id,
+  apiUrl: getApiUrl(lyraSepolia.blockExplorers.default.url),
+} as const satisfies ChainBlockscoutConfig
+
 const blockscoutConfigs = [
   sepoliaBlockscoutConfig,
   goerliBlockscoutConfig,
   opSepoliaBlockscoutConfig,
   baseSepoliaBlockscoutConfig,
+  orderlySepoliaBlockscoutConfig,
+  zoraSepoliaBlockscoutConfig,
+  modeSepoliaBlockscoutConfig,
+  lyraSepoliaBlockscoutConfig,
 ] as const
 
 export const blockscoutSupportedChainIds = blockscoutConfigs.map(

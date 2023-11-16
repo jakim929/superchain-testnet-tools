@@ -24,6 +24,7 @@
     "@bull-board/api": "^5.9.1",
     "@bull-board/fastify": "^5.9.1",
     "@fastify/cors": "^8.4.1",
+    "@superchain-testnet-tools/chains": "*",
     "@superchain-testnet-tools/common-ts": "*",
     "abitype": "^0.8.11",
     "bullmq": "^4.12.4",

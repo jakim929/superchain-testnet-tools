@@ -55,6 +55,9 @@ importers:
       '@fastify/cors':
         specifier: ^8.4.1
         version: 8.4.1
+      '@superchain-testnet-tools/chains':
+        specifier: '*'
+        version: link:../chains
       '@superchain-testnet-tools/common-ts':
         specifier: '*'
         version: link:../common-ts
