@@ -12,8 +12,8 @@ export const indexedOpStackChains = [
   baseSepoliaOpStackChain,
   orderlySepoliaOpStackChain,
   zoraSepoliaOpStackChain,
-  lyraSepoliaOpStackChain,
-  modeSepoliaOpStackChain,
+  // lyraSepoliaOpStackChain,
+  // modeSepoliaOpStackChain,
 ]
 
 export type IndexedOpStackChains = typeof indexedOpStackChains
