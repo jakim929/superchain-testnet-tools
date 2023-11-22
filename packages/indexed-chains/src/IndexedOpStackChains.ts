@@ -11,7 +11,7 @@ export const indexedOpStackChains = [
   optimismSepoliaOpStackChain,
   baseSepoliaOpStackChain,
   orderlySepoliaOpStackChain,
-  zoraSepoliaOpStackChain,
+  // zoraSepoliaOpStackChain,
   // lyraSepoliaOpStackChain,
   // modeSepoliaOpStackChain,
 ]
