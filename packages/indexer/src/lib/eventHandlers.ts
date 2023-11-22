@@ -1,6 +1,12 @@
-import { AppType } from '@/generated'
+import {
+  AppType,
+  RelayedMessageEvent,
+  FailedRelayedMessageEvent,
+} from '@/generated'
 import { Address, Hex } from 'viem'
 import { getCrossDomainMessageHash } from '@superchain-testnet-tools/common-ts'
+import { Model } from '@ponder/core'
+import { sortBy } from '@/src/lib/sortBy'
 
 const getCrossDomainMessageKey = ({
   msgHash,
@@ -103,6 +109,88 @@ export const getSentMessageEventHandler = ({
 type SentMessageExtension1EventHandler =
   AppType['L1CrossDomainMessengerContract_11155420:SentMessageExtension1']
 
+const getEventWithMetadataGetter = (status: 'RELAYED' | 'FAILED') => {
+  return (event: RelayedMessageEvent | FailedRelayedMessageEvent) => {
+    const { blockTimestamp, transactionHash } = event
+    return {
+      status,
+      lastUpdatedAtBlockTimestamp: blockTimestamp,
+      transactionHash,
+      event,
+    }
+  }
+}
+
+const getCrossDomainMessageParamsFromTargetChainEvents = async (
+  {
+    sourceChainId,
+    targetChainId,
+    msgHash,
+  }: { sourceChainId: number; targetChainId: number; msgHash: Hex },
+  RelayedMessageEvent: Model<RelayedMessageEvent>,
+  FailedRelayedMessageEvent: Model<FailedRelayedMessageEvent>,
+) => {
+  const [relayedMessageEvents, failedRelayedMessageEvents] = await Promise.all([
+    RelayedMessageEvent.findMany({
+      where: {
+        sourceChainId,
+        targetChainId,
+        msgHash,
+      },
+    }),
+    FailedRelayedMessageEvent.findMany({
+      where: {
+        sourceChainId,
+        targetChainId,
+        msgHash,
+      },
+    }),
+  ])
+
+  if (
+    relayedMessageEvents.length === 0 &&
+    failedRelayedMessageEvents.length === 0
+  ) {
+    return
+  }
+
+  if (relayedMessageEvents.length > 1) {
+    throw new Error(
+      `More than one RelayedMessageEvent found for msgHash ${msgHash} for sourceChainId ${sourceChainId} and targetChainId ${targetChainId}`,
+    )
+  }
+
+  const sortedEventsWithMetadata = sortBy(
+    [
+      ...relayedMessageEvents.map(getEventWithMetadataGetter('RELAYED')),
+      ...failedRelayedMessageEvents.map(getEventWithMetadataGetter('FAILED')),
+    ],
+    ({ lastUpdatedAtBlockTimestamp }) => lastUpdatedAtBlockTimestamp,
+    'asc',
+  )
+
+  const sortedFailedEventsMetadata = sortedEventsWithMetadata.filter(
+    (x) => x.status === 'FAILED',
+  )
+
+  const latestEvent =
+    sortedEventsWithMetadata[sortedEventsWithMetadata.length - 1]
+
+  const latestFailedRelayedMessageEvent =
+    sortedFailedEventsMetadata[sortedFailedEventsMetadata.length - 1] || null
+
+  return {
+    status: latestEvent.status,
+    lastUpdatedAtBlockTimestamp: latestEvent.lastUpdatedAtBlockTimestamp,
+    transactionHashes: sortedEventsWithMetadata.map(
+      ({ transactionHash }) => transactionHash,
+    ),
+    // there should only be one of these
+    relayedMessageEvent: relayedMessageEvents[0]?.id,
+    latestFailedRelayedMessageEvent: latestFailedRelayedMessageEvent?.event.id,
+  }
+}
+
 export const getSentMessageExtension1EventHandler = ({
   l2ChainId,
   sourceChainId,
@@ -113,8 +201,13 @@ export const getSentMessageExtension1EventHandler = ({
   targetChainId: number
 }): SentMessageExtension1EventHandler => {
   return async ({ event, context }) => {
-    const { SentMessageExtension1Event, SentMessageEvent, CrossDomainMessage } =
-      context.entities
+    const {
+      SentMessageExtension1Event,
+      SentMessageEvent,
+      CrossDomainMessage,
+      RelayedMessageEvent,
+      FailedRelayedMessageEvent,
+    } = context.entities
 
     const results = await SentMessageEvent.findMany({
       where: {
@@ -179,9 +272,23 @@ export const getSentMessageExtension1EventHandler = ({
       targetChainId,
     })
 
+    // It's possible that the target chain transaction has already been indexed before this one. Add the fields in retroactively
+    const paramsFromTargetChainEvents =
+      await getCrossDomainMessageParamsFromTargetChainEvents(
+        {
+          sourceChainId,
+          targetChainId,
+          msgHash,
+        },
+        RelayedMessageEvent,
+        FailedRelayedMessageEvent,
+      )
+
     const data = {
       opStackChain: l2ChainId,
-      status: 'SENT' as const,
+      status: paramsFromTargetChainEvents
+        ? paramsFromTargetChainEvents.status
+        : ('SENT' as const),
       msgHash,
       sourceChainId: sourceChainId,
       targetChainId: targetChainId,
@@ -195,7 +302,13 @@ export const getSentMessageExtension1EventHandler = ({
       sentMessageEventTransactionFrom: event.transaction.from,
       sentMessageEvent: sentMessageEvent.id,
       sentMessageExtension1Event: sentMessageExtension1EventKey,
-      transactionHashes: [event.transaction.hash],
+      transactionHashes: [
+        event.transaction.hash,
+        ...(paramsFromTargetChainEvents?.transactionHashes || []),
+      ],
+      relayedMessageEvent: paramsFromTargetChainEvents?.relayedMessageEvent,
+      latestFailedRelayedMessageEvent:
+        paramsFromTargetChainEvents?.latestFailedRelayedMessageEvent,
     }
 
     await CrossDomainMessage.create({
@@ -244,6 +357,16 @@ export const getRelayedMessageEventHandler = ({
       sourceChainId,
       targetChainId,
     })
+
+    const crossDomainMessage = await CrossDomainMessage.findUnique({
+      id: crossDomainMessageKey,
+    })
+
+    if (!crossDomainMessage) {
+      // If the source transaction hasn't been indexed yet, do nothing
+      // When the source transaction is indexed, it will update the crossDomainMessage with the target chain transaction as well
+      return
+    }
 
     await CrossDomainMessage.update({
       id: crossDomainMessageKey,
@@ -299,6 +422,16 @@ export const getFailedRelayedMessageEventHandler = ({
       sourceChainId,
       targetChainId,
     })
+
+    const crossDomainMessage = await CrossDomainMessage.findUnique({
+      id: crossDomainMessageKey,
+    })
+
+    if (!crossDomainMessage) {
+      // If the source transaction hasn't been indexed yet, do nothing
+      // When the source transaction is indexed, it will update the crossDomainMessage with the target chain transaction as well
+      return
+    }
 
     await CrossDomainMessage.update({
       id: crossDomainMessageKey,

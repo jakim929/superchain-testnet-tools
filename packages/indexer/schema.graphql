@@ -38,7 +38,8 @@ type CrossDomainMessage @entity {
   sentMessageEvent: SentMessageEvent!
   sentMessageExtension1Event: SentMessageExtension1Event! 
   relayedMessageEvent: RelayedMessageEvent
-  failedRelayedMessageEvent: FailedRelayedMessageEvent
+  # ideally we store all, but for now we only store the latest because of limitations on ponder graphql schema
+  latestFailedRelayedMessageEvent: FailedRelayedMessageEvent  
 }
 
 type SentMessageEvent @entity {
