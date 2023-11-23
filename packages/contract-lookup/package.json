@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm tsup",
     "dev:local:services": "docker-compose up -d",
     "dev:service": "tsx src/cmd/runService.ts",
     "dev:worker": "tsx src/cmd/runWorker.ts",

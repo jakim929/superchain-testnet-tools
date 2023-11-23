@@ -1,17 +1,21 @@
 import { ponder } from '@/generated'
+
 import {
-  getFailedRelayedMessageEventHandler,
-  getRelayedMessageEventHandler,
   getSentMessageEventHandler,
   getSentMessageExtension1EventHandler,
-} from '@/src/lib/eventHandlers'
+  getRelayedMessageEventHandler,
+  getFailedRelayedMessageEventHandler,
+} from '@/src/handlers'
+
 import { IndexedOpStackChain } from '@superchain-testnet-tools/indexed-chains'
 
-export const setupEventHandlers = (
-  opStackChain: IndexedOpStackChain,
-) => {
+export const setupEventHandlers = (opStackChain: IndexedOpStackChain) => {
   const l1ChainId = opStackChain.l1Chain.id
   const l2ChainId = opStackChain.l2Chain.id
+
+  console.log('setting up handler for ', l1ChainId, l2ChainId)
+
+  // L1 => L2 messages
 
   ponder.on(
     `L1CrossDomainMessengerContract_${l2ChainId}:SentMessage` as const,
@@ -49,7 +53,7 @@ export const setupEventHandlers = (
     }),
   )
 
-  // Orderly Sepolia L2 => L1
+  // L2 => L1 messages
 
   ponder.on(
     `L2CrossDomainMessengerContract_${l2ChainId}:SentMessage` as const,
