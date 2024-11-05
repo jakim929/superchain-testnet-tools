@@ -3,7 +3,6 @@ import { OpStackChain } from './types/OpStackChain'
 import { OpStackChainL1Contracts } from './types/OpStackChainContracts'
 import { defineChain } from 'viem'
 import { optimismSepolia, sepolia } from 'viem/chains'
-import { formattersOptimism } from 'viem/chains/utils'
 
 export const modeSepoliaOpStackChainL1Contracts = {
   l1CrossDomainMessenger: {
@@ -16,33 +15,29 @@ export const modeSepoliaOpStackChainL1Contracts = {
   },
 } as const satisfies OpStackChainL1Contracts
 
-export const modeSepolia = defineChain(
-  {
-    id: 919,
-    network: 'mode-sepolia',
-    name: 'Mode Sepolia',
-    nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
-    rpcUrls: {
-      default: {
-        http: ['https://l2-mode-sepolia-vtnhnpim72.t.conduit.xyz'],
-      },
-      public: {
-        http: ['https://l2-mode-sepolia-vtnhnpim72.t.conduit.xyz'],
-      },
+export const modeSepolia = defineChain({
+  id: 919,
+  network: 'mode-sepolia',
+  name: 'Mode Sepolia',
+  nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://l2-mode-sepolia-vtnhnpim72.t.conduit.xyz'],
     },
-    blockExplorers: {
-      default: {
-        name: 'Conduit',
-        url: 'https://explorerl2-mode-sepolia-vtnhnpim72.t.conduit.xyz',
-      },
+    public: {
+      http: ['https://l2-mode-sepolia-vtnhnpim72.t.conduit.xyz'],
     },
-    testnet: true,
-    sourceId: 11155111, // sepolia
   },
-  {
-    formatters: optimismSepolia.formatters,
+  blockExplorers: {
+    default: {
+      name: 'Conduit',
+      url: 'https://explorerl2-mode-sepolia-vtnhnpim72.t.conduit.xyz',
+    },
   },
-)
+  testnet: true,
+  sourceId: 11155111, // sepolia
+  formatters: optimismSepolia.formatters,
+})
 
 export const modeSepoliaOpStackChain = {
   l1Chain: sepolia,

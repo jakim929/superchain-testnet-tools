@@ -1,4 +1,5 @@
 import { NavBarLayout } from '@/layouts/NavBarLayout'
+import { AddressPage } from '@/pages/AddressPage'
 import { BridgePage } from '@/pages/BridgePage'
 import { ChainsPage } from '@/pages/ChainsPage'
 import { CrossDomainTransactionPage } from '@/pages/CrossDomainTransactionPage'
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: '/tx/:transactionHash',
         element: <CrossDomainTransactionPage />,
+      },
+      {
+        path: '/address/:address',
+        element: <AddressPage />,
       },
     ],
   },

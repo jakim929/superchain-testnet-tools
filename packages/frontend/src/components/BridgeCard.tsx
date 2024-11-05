@@ -17,8 +17,6 @@ import {
   Address,
   Chain,
   Hex,
-  Log,
-  decodeEventLog,
   encodeFunctionData,
   formatEther,
   parseEther,
@@ -39,6 +37,7 @@ import { Multicall3Abi } from '@/constants/Multicall3Abi'
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { truncateHash } from '@/lib/truncateHash'
+import { ArrowRight } from 'lucide-react'
 
 const truncateDecimal = (
   decimalString: string,
@@ -82,21 +81,25 @@ const NetworkSwitch = ({
   const { name, id } = opStackChain.l2Chain
   const formattedBalance = useFormattedBalance(id)
   return (
-    <div className="w-full flex space-x-2 cursor-pointer">
+    <div className="w-full flex space-x-2 cursor-pointer hover:bg-muted/50 rounded-lg px-2">
       <Switch
         id={`${id}-network-switch`}
         onCheckedChange={(checked) => {
           onChange(checked)
         }}
         checked={isSelected}
-        className="self-center"
+        className="self-center data-[state=checked]:bg-primary"
       />
       <Label
         htmlFor={`${id}-network-switch`}
         className="w-full cursor-pointer flex items-center justify-between select-none py-3"
       >
-        <div>{name}</div>
-        {formattedBalance && <div>{formattedBalance}</div>}
+        <div className="flex items-center gap-2">{name}</div>
+        {formattedBalance && (
+          <div className="text-muted-foreground text-sm">
+            {formattedBalance}
+          </div>
+        )}
       </Label>
     </div>
   )
@@ -176,9 +179,10 @@ const AmountQuickInputButton = ({
       size="sm"
       onClick={onClick}
       className={cn(
-        'flex-1',
-        isSelected &&
-          'border-primary/90 bg-primary/90 text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+        'flex-1 transition-all',
+        isSelected
+          ? 'border-primary/90 bg-primary text-primary-foreground hover:bg-primary/90'
+          : 'hover:border-primary/50',
       )}
     >
       {formatEther(amount)} ETH
@@ -234,11 +238,28 @@ const Preview = ({
   amount: bigint
 }) => {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
-        <div className="font-semibold">Total amount</div>
-        <div>{formatEther(BigInt(selectedChains.length) * amount)} ETH</div>
+    <div className="flex flex-col gap-4 p-4 bg-muted/30 rounded-lg">
+      <div className="flex justify-between items-center">
+        <div className="text-sm text-muted-foreground">Total amount</div>
+        <div className="font-medium text-lg">
+          {formatEther(BigInt(selectedChains.length) * amount)} ETH
+        </div>
       </div>
+      {selectedChains.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <div className="text-sm text-muted-foreground">Bridging to:</div>
+          <div className="flex flex-wrap gap-2">
+            {selectedChains.map((chain) => (
+              <div
+                key={chain.l2Chain.id}
+                className="bg-background px-3 py-1 rounded-full text-sm border"
+              >
+                {chain.l2Chain.name}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -317,8 +338,6 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     // enabled: !!address && amount > 0n && opStackChains.length > 0,
   })
 
-  console.log('simulatedData', simulatedData, error)
-
   const {
     writeContract,
     isPending,
@@ -344,46 +363,21 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     },
   })
 
-  const { isLoading: isConfirmationLoading, data } =
-    useWaitForTransactionReceipt({
-      hash: response,
-      confirmations: 5,
-    })
-
-  console.log('data', data)
-  const testLog: Log = {
-    address: '0x5fd6c8d6756c3327f7a368f1cfbc7c003bc7efc9',
-    topics: [
-      '0xcb0f7ffd78f9aee47a248fae8db181db6eee833039123e026dcbff529522e52a',
-      '0x0000000000000000000000008a986ce389686dd140a5fd834b8b25d9d053d0fe',
-    ],
-    data: '0x000000000000000000000000ca11bde05977b3631167028862be2a173976ca110000000000000000000000000000000000000000000000000000000000000080000100000000000000000000000000000000000000000000000000000000001400000000000000000000000000000000000000000000000000000000000f42400000000000000000000000000000000000000000000000000000000000000000',
-    blockNumber: 4560802n,
-    transactionHash:
-      '0xedd529ca6accf66020b3b936d9af436bc896efeb35d2d4ad4c43a86e803e49d0',
-    transactionIndex: 18,
-    blockHash:
-      '0x86c278001b48f6ad7566c96e49ba35012994f8cef4b5a8f99883fa3b43379078',
-    logIndex: 50,
-    removed: false,
-  }
-
-  const result = decodeEventLog({
-    abi: L1CrossDomainMessengerAbi,
-    data: testLog.data,
-    topics: testLog.topics,
+  const { isLoading: isConfirmationLoading } = useWaitForTransactionReceipt({
+    hash: response,
+    confirmations: 5,
   })
-
-  result.eventName
-
-  console.log(result)
 
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle className="flex justify-between">{l1Chain.name}</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          {l1Chain.name}
+        </CardTitle>
         {formattedL1Balance && (
-          <CardDescription>Balance: {formattedL1Balance}</CardDescription>
+          <CardDescription className="flex items-center gap-2">
+            Balance: <span className="font-medium">{formattedL1Balance}</span>
+          </CardDescription>
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-8">
@@ -396,10 +390,10 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
         <Separator className="" />
         <Preview selectedChains={selectedChains} amount={amount} />
       </CardContent>
-      <CardFooter className="flex">
+      <CardFooter className="flex gap-2">
         {chain?.id === l1Chain.id ? (
           <Button
-            className="w-full"
+            className="w-full gap-2"
             disabled={
               isPending ||
               !writeContract ||
@@ -410,7 +404,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
               writeContract(simulatedData!.request)
             }}
           >
-            Bridge
+            Bridge <ArrowRight className="w-4 h-4" />
           </Button>
         ) : (
           <SwitchToChainButton chain={l1Chain} />
