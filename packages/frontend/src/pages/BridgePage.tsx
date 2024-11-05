@@ -1,9 +1,9 @@
 import { BridgeCard } from '@/components/BridgeCard'
-import { Chain, goerli, sepolia } from 'viem/chains'
+import { Chain, sepolia } from 'viem/chains'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 
-const supportedSourceChains = [sepolia, goerli]
+const supportedSourceChains = [sepolia]
 
 const getTabKey = (currentChain?: Chain) => {
   if (!currentChain) return supportedSourceChains[0].id.toString()
@@ -16,8 +16,8 @@ const getTabKey = (currentChain?: Chain) => {
 }
 
 export const BridgePage = () => {
-  const { chain } = useNetwork()
-  const { switchNetwork } = useSwitchNetwork()
+  const { chain } = useAccount()
+  const { switchChain } = useSwitchChain()
   return (
     <div className="flex justify-center ">
       <Tabs
@@ -28,7 +28,7 @@ export const BridgePage = () => {
         <TabsList className="w-full flex">
           {supportedSourceChains.map((chain) => (
             <TabsTrigger
-              onClick={() => switchNetwork?.(chain.id)}
+              onClick={() => switchChain?.({ chainId: chain.id })}
               className="flex-1"
               key={chain.name}
               value={chain.id.toString()}

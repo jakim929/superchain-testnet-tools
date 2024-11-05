@@ -10,8 +10,8 @@
     "build": "tsup"
   },
   "dependencies": {
-    "viem": "^1.18.8",
-    "@superchain-testnet-tools/chains": "*"
+    "viem": "^2.21.40",
+    "@superchain-testnet-tools/chains": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^7.2.0"

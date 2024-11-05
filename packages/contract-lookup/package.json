@@ -24,8 +24,8 @@
     "@bull-board/api": "^5.9.1",
     "@bull-board/fastify": "^5.9.1",
     "@fastify/cors": "^8.4.1",
-    "@superchain-testnet-tools/chains": "*",
-    "@superchain-testnet-tools/common-ts": "*",
+    "@superchain-testnet-tools/chains": "workspace:*",
+    "@superchain-testnet-tools/common-ts": "workspace:*",
     "abitype": "^0.8.11",
     "bullmq": "^4.12.4",
     "dotenv": "^16.3.1",
@@ -33,7 +33,7 @@
     "fastify": "^4.24.2",
     "luxon": "^3.4.3",
     "pg": "^8.11.3",
-    "viem": "^1.18.8",
+    "viem": "^2.21.40",
     "zod": "^3.22.4"
   }
 }

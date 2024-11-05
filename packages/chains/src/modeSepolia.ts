@@ -2,7 +2,7 @@ import { opStackChainL2PredeployContracts } from './opStackChainL2PredeployContr
 import { OpStackChain } from './types/OpStackChain'
 import { OpStackChainL1Contracts } from './types/OpStackChainContracts'
 import { defineChain } from 'viem'
-import { sepolia } from 'viem/chains'
+import { optimismSepolia, sepolia } from 'viem/chains'
 import { formattersOptimism } from 'viem/chains/utils'
 
 export const modeSepoliaOpStackChainL1Contracts = {
@@ -40,7 +40,7 @@ export const modeSepolia = defineChain(
     sourceId: 11155111, // sepolia
   },
   {
-    formatters: formattersOptimism,
+    formatters: optimismSepolia.formatters,
   },
 )
 

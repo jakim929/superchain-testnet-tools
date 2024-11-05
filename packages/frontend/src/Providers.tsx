@@ -1,18 +1,16 @@
-import { createWagmiConfig } from '@/lib/wagmi'
-import { WagmiConfig } from 'wagmi'
+import { WagmiConfig, WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ConnectKitProvider } from 'connectkit'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { config } from '@/lib/wagmi'
 
 const queryClient = new QueryClient()
 
-const wagmiConfig = createWagmiConfig(queryClient)
-
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <WagmiConfig config={wagmiConfig}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{children}</ConnectKitProvider>
+        <RainbowKitProvider>{children}</RainbowKitProvider>
       </QueryClientProvider>
-    </WagmiConfig>
+    </WagmiProvider>
   )
 }

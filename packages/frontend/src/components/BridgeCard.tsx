@@ -29,11 +29,10 @@ import { cn } from '@/lib/utils'
 import {
   useAccount,
   useBalance,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useSwitchNetwork,
-  useWaitForTransaction,
+  useWriteContract,
+  useSimulateContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
 } from 'wagmi'
 import { L1CrossDomainMessengerAbi } from '@/constants/L1CrossDomainMessengerAbi'
 import { Multicall3Abi } from '@/constants/Multicall3Abi'
@@ -59,7 +58,9 @@ const useFormattedBalance = (chainId: number) => {
   const { data } = useBalance({
     address: address!,
     chainId: chainId,
-    enabled: !!address,
+    query: {
+      enabled: !!address,
+    },
   })
 
   if (!address || !data) {
@@ -253,42 +254,6 @@ const getBridgeFundsFunctionData = (address?: Address) => {
   })
 }
 
-const useBridgeWrite = (
-  opStackChains: OpStackChain[],
-  amount: bigint,
-  onSuccess: (hash: Hex) => void,
-) => {
-  const { address } = useAccount()
-
-  const { config } = usePrepareContractWrite({
-    abi: Multicall3Abi,
-    functionName: 'aggregate3Value',
-    address: '0xcA11bde05977b3631167028862bE2a173976CA11',
-    args: [
-      // @ts-ignore
-      [
-        ...opStackChains.map(({ l1Contracts }) => {
-          return {
-            target: l1Contracts.l1CrossDomainMessenger.address,
-            allowFailure: false,
-            callData: getBridgeFundsFunctionData(address!),
-            value: amount,
-          }
-        }),
-      ],
-    ],
-    value: amount * BigInt(opStackChains.length),
-    enabled: !!address && amount > 0n && opStackChains.length > 0,
-  })
-
-  return useContractWrite({
-    ...config,
-    onSuccess: (data) => {
-      onSuccess(data.hash)
-    },
-  })
-}
-
 const getBlockExplorerLink = (chain: Chain, transactionHash: Hex) => {
   const baseUrl = chain.blockExplorers!.default.url
   return `${baseUrl}/tx/${transactionHash}`
@@ -299,13 +264,13 @@ const SwitchToChainButton = ({
 }: {
   chain: Chain
 }) => {
-  const { switchNetwork, isLoading } = useSwitchNetwork({ chainId: chain.id })
+  const { switchChain, isPending } = useSwitchChain()
   return (
     <Button
       className="w-full"
-      disabled={!switchNetwork || isLoading}
+      disabled={!switchChain || isPending}
       onClick={() => {
-        switchNetwork?.()
+        switchChain?.({ chainId: chain.id })
       }}
     >
       Switch network to {chain.name}
@@ -320,7 +285,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
   )
 
   const formattedL1Balance = useFormattedBalance(chainId)
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   const { toast } = useToast()
 
@@ -329,50 +294,61 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
 
   const [amount, setAmount] = useState<bigint>(0n)
 
-  const {
-    write,
-    isLoading,
-    data: response,
-  } = useBridgeWrite(selectedChains, amount, (hash: Hex) => {
-    toast({
-      title: 'L1 transaction sent',
-      description: `${truncateHash(hash)}`,
-      action: (
-        <ToastAction
-          altText="View on explorer"
-          onClick={() => {
-            window.open(getBlockExplorerLink(l1Chain, hash), '_blank')
-          }}
-        >
-          View on explorer
-        </ToastAction>
-      ),
-    })
+  const { address } = useAccount()
+
+  const { data: simulatedData, error } = useSimulateContract({
+    abi: Multicall3Abi,
+    functionName: 'aggregate3Value',
+    address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    args: [
+      // @ts-ignore
+      [
+        ...selectedChains.map(({ l1Contracts }) => {
+          return {
+            target: l1Contracts.l1CrossDomainMessenger.address,
+            allowFailure: false,
+            callData: getBridgeFundsFunctionData(address!),
+            value: amount,
+          }
+        }),
+      ],
+    ],
+    value: amount * BigInt(selectedChains.length),
+    // enabled: !!address && amount > 0n && opStackChains.length > 0,
   })
 
-  const { isLoading: isConfirmationLoading, data } = useWaitForTransaction({
-    hash: response?.hash,
-    confirmations: 5,
-    onSuccess: () => {
-      toast({
-        title: 'L1 transaction confirmed',
-        description: `${truncateHash(response!.hash)}`,
-        action: (
-          <ToastAction
-            altText="View on explorer"
-            onClick={() => {
-              window.open(
-                getBlockExplorerLink(l1Chain, response!.hash),
-                '_blank',
-              )
-            }}
-          >
-            View on explorer
-          </ToastAction>
-        ),
-      })
+  console.log('simulatedData', simulatedData, error)
+
+  const {
+    writeContract,
+    isPending,
+    data: response,
+  } = useWriteContract({
+    mutation: {
+      onSuccess: (hash: Hex) => {
+        toast({
+          title: 'L1 transaction sent',
+          description: `${truncateHash(hash)}`,
+          action: (
+            <ToastAction
+              altText="View on explorer"
+              onClick={() => {
+                window.open(getBlockExplorerLink(l1Chain, hash), '_blank')
+              }}
+            >
+              View on explorer
+            </ToastAction>
+          ),
+        })
+      },
     },
   })
+
+  const { isLoading: isConfirmationLoading, data } =
+    useWaitForTransactionReceipt({
+      hash: response,
+      confirmations: 5,
+    })
 
   console.log('data', data)
   const testLog: Log = {
@@ -424,9 +400,14 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
         {chain?.id === l1Chain.id ? (
           <Button
             className="w-full"
-            disabled={isLoading || !write || isConfirmationLoading}
+            disabled={
+              isPending ||
+              !writeContract ||
+              isConfirmationLoading ||
+              !simulatedData?.request
+            }
             onClick={() => {
-              write?.()
+              writeContract(simulatedData!.request)
             }}
           >
             Bridge

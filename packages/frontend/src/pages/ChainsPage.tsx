@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { useSwitchNetwork } from 'wagmi'
+import { useSwitchChain } from 'wagmi'
 
 const ChainRow = ({
   chain,
@@ -20,7 +20,7 @@ const ChainRow = ({
 }) => {
   const { l1Chain, l2Chain } = chain
 
-  const { switchNetwork } = useSwitchNetwork()
+  const { switchChain } = useSwitchChain()
 
   return (
     <TableRow>
@@ -42,7 +42,7 @@ const ChainRow = ({
         <Button
           size="sm"
           variant="outline"
-          onClick={() => switchNetwork?.(l2Chain.id)}
+          onClick={() => switchChain?.({ chainId: l2Chain.id })}
         >
           Add network
         </Button>
